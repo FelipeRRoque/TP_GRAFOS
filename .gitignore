@@ -1,0 +1,87 @@
+############################
+# .NET / .NET Core
+############################
+
+# Build results
+bin/
+obj/
+out/
+[Bb]uild/
+[Ll]og/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.svclog
+
+# Publish folders
+publish/
+app.publish/
+
+############################
+# Visual Studio
+############################
+
+.vs/
+*.user
+*.suo
+*.userprefs
+*.cache
+*.ide
+*.dbmdl
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+.nuget/
+project.lock.json
+
+############################
+# VS Code
+############################
+
+.vscode/
+*.code-workspace
+
+############################
+# OS files
+############################
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+############################
+# Logs
+############################
+
+*.log
+
+############################
+# Environment / Secrets
+############################
+
+*.env
+*.env.*
+
+############################
+# Others
+############################
+
+# JetBrains / Rider (caso use)
+.idea/
+
+# Generated files
+Generated/
+*.generated.cs
