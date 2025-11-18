@@ -9,17 +9,17 @@ namespace TP_GRAFOS
     {
         static void Main(string[] args)
         {
-            var grafo = new Grafo<string>();
+            var grafoNaoDirecionado = new Grafo<string>();
 
-            grafo.AdcionarVertice("A");
-            grafo.AdcionarVertice("B");
-            grafo.AdcionarVertice("C");
+            grafoNaoDirecionado.AdcionarVertice("A");
+            grafoNaoDirecionado.AdcionarVertice("B");
+            grafoNaoDirecionado.AdcionarVertice("C");
 
-            grafo.AdcionarAresta("A", "B", 5);
-            grafo.AdcionarAresta("A", "C", 10);
-            grafo.AdcionarAresta("B", "C", 3);
+            grafoNaoDirecionado.AdcionarAresta("A", "B", 5);
+            grafoNaoDirecionado.AdcionarAresta("A", "C", 10);
+            grafoNaoDirecionado.AdcionarAresta("B", "C", 3);
 
-            grafo.ExibirGrafo();
+            grafoNaoDirecionado.ExibirGrafo();
         }
     }
 }

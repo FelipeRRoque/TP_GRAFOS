@@ -12,3 +12,4 @@ C:\Users\FELIPE_RROQUE\Desktop\Felipe\TP_GRAFOS\obj\Debug\net9.0\refint\TP_GRAFO
 C:\Users\FELIPE_RROQUE\Desktop\Felipe\TP_GRAFOS\obj\Debug\net9.0\TP_GRAFOS.pdb
 C:\Users\FELIPE_RROQUE\Desktop\Felipe\TP_GRAFOS\obj\Debug\net9.0\TP_GRAFOS.genruntimeconfig.cache
 C:\Users\FELIPE_RROQUE\Desktop\Felipe\TP_GRAFOS\obj\Debug\net9.0\ref\TP_GRAFOS.dll
+C:\Users\FELIPE_RROQUE\Desktop\Felipe\TP_GRAFOS\obj\Debug\net9.0\TP_GRAFOS.sourcelink.json
