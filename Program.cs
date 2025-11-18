@@ -9,17 +9,8 @@ namespace TP_GRAFOS
     {
         static void Main(string[] args)
         {
-            var grafoNaoDirecionado = new Grafo<string>();
-
-            grafoNaoDirecionado.AdcionarVertice("A");
-            grafoNaoDirecionado.AdcionarVertice("B");
-            grafoNaoDirecionado.AdcionarVertice("C");
-
-            grafoNaoDirecionado.AdcionarAresta("A", "B", 5);
-            grafoNaoDirecionado.AdcionarAresta("A", "C", 10);
-            grafoNaoDirecionado.AdcionarAresta("B", "C", 3);
-
-            grafoNaoDirecionado.ExibirGrafo();
+            var grafo = Arquivo.LerDados("dataGrafos/grafo01.dimacs");
+            grafo.ExibirGrafo();
         }
     }
 }

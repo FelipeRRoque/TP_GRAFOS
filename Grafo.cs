@@ -6,21 +6,20 @@ using System.Threading.Tasks;
 namespace TP_GRAFOS
 {
     /// <summary>
-    /// Representa um grafo genérico utilizando lista de adjacência.
-    /// Permite adicionar vértices, adicionar arestas e exibir a estrutura do grafo.
+    /// Representa um grafo genérico usando lista de adjacência.
+    /// Permite adicionar vértices, inserir arestas e visualizar a estrutura resultante.
     /// </summary>
-    /// <typeparam name="T">Tipo do dado armazenado em cada vértice.</typeparam>
+    /// <typeparam name="T">Tipo dos valores armazenados nos vértices.</typeparam>
     public class Grafo<T>
     {
         /// <summary>
-        /// Estrutura de dados que armazena cada vértice e sua lista de arestas.
-        /// A chave é um vértice, e o valor é uma lista de arestas conectadas a ele.
+        /// Lista de adjacência do grafo.
+        /// Cada vértice é associado a uma lista de arestas que saem dele.
         /// </summary>
         private readonly Dictionary<Vertice<T>, List<Aresta<T>>> _listaAdjacencia;
-        // readonly para garantir que a referência do dicionário não seja alterada após a inicialização.
 
         /// <summary>
-        /// Inicializa um novo grafo com lista de adjacência vazia.
+        /// Cria um grafo vazio.
         /// </summary>
         public Grafo()
         {
@@ -28,71 +27,58 @@ namespace TP_GRAFOS
         }
 
         /// <summary>
-        /// Adiciona um novo vértice ao grafo, se ele ainda não existir.
+        /// Adiciona um novo vértice ao grafo, caso ainda não exista.
         /// </summary>
-        /// <param name="dado">Dado armazenado no vértice.</param>
+        /// <param name="dado">Valor armazenado no vértice.</param>
         public void AdcionarVertice(T dado)
         {
             var novoVertice = new Vertice<T>(dado);
 
-            if (!_listaAdjacencia.ContainsKey(novoVertice))
-            {
-                _listaAdjacencia.Add(novoVertice, new List<Aresta<T>>());
-            }
+            if (!_listaAdjacencia.ContainsKey(novoVertice ))
+                _listaAdjacencia.Add(novoVertice , new List<Aresta<T>>());
         }
 
         /// <summary>
-        /// Adiciona uma aresta entre dois vértices já existentes no grafo.
-        /// O grafo é considerado não-direcionado, portanto a ligação é inserida nos dois sentidos.
+        /// Adiciona uma aresta entre dois vértices existentes.
         /// </summary>
-        /// <param name="dadoOrigem">Valor do vértice de origem.</param>
-        /// <param name="dadoDestino">Valor do vértice de destino.</param>
-        /// <param name="peso">Peso da aresta. Por padrão, 1.</param>
-        public void AdcionarAresta(T dadoOrigem, T dadoDestino, int peso = 1)
+        /// <param name="origem">Valor do vértice de origem.</param>
+        /// <param name="destino">Valor do vértice de destino.</param>
+        /// <param name="peso">Peso da aresta.</param>
+        /// <param name="capacidade">Capacidade da aresta.</param>
+        public void AdcionarAresta(T origem, T destino, int peso = 1, int capacidade = 0)
         {
-            var verticeOrigem = EncontrarVertice(dadoOrigem);
-            var verticeDestino = EncontrarVertice(dadoDestino);
+            var verticeOrigem = EncontrarVertice(origem);
+            var verticeDestino = EncontrarVertice(destino);
 
             if (verticeOrigem != null && verticeDestino != null)
-            {
-                // Grafo não-direcionado: adiciona ida e volta
-                _listaAdjacencia[verticeOrigem].Add(new Aresta<T>(verticeDestino, peso));
-                _listaAdjacencia[verticeDestino].Add(new Aresta<T>(verticeOrigem, peso));
-            }
+                _listaAdjacencia[verticeOrigem].Add(new Aresta<T>(verticeDestino, peso, capacidade));
         }
 
         /// <summary>
-        /// Busca e retorna o vértice cujo dado seja igual ao valor informado.
-        /// Se não encontrado, retorna null.
+        /// Localiza e retorna o vértice que contém o dado informado.
         /// </summary>
-        /// <param name="dado">Valor do vértice buscado.</param>
-        /// <returns>Objeto Vertice<T> correspondente ou null se não existir.</returns>
+        /// <param name="dado">Valor procurado.</param>
+        /// <returns>O vértice correspondente ou null, se inexistente.</returns>
         private Vertice<T> EncontrarVertice(T dado)
         {
             foreach (var vertice in _listaAdjacencia.Keys)
-            {
                 if (vertice.Dado.Equals(dado))
-                {
                     return vertice;
-                }
-            }
+
             return null;
         }
 
         /// <summary>
-        /// Exibe no console todos os vértices do grafo e suas arestas adjacentes.
-        /// Formato: Vértice X -> valor1 (peso) -> valor2 (peso)...
+        /// Exibe no console a estrutura do grafo: vértices e suas arestas.
         /// </summary>
         public void ExibirGrafo()
         {
-            foreach (var vertice in _listaAdjacencia.Keys)
+            foreach (var vertice in _listaAdjacencia)
             {
-                Console.Write($"Vértice {vertice.Dado}: ");
+                Console.Write($"Vértice {vertice.Key.Dado}: ");
 
-                foreach (var aresta in _listaAdjacencia[vertice])
-                {
-                    Console.Write($"-> {aresta.Destino.Dado} (Peso: {aresta.Peso}) ");
-                }
+                foreach (var aresta in vertice.Value)
+                    Console.Write($"-> {aresta.Destino.Dado} (Peso: {aresta.Peso} | Capacidade: {aresta.Capacidade}) ");
 
                 Console.WriteLine();
             }

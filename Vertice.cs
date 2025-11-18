@@ -6,30 +6,32 @@ using System.Threading.Tasks;
 namespace TP_GRAFOS
 {
     /// <summary>
-    /// Representa um vértice genérico em um grafo.
-    /// Armazena um dado do tipo T e pode ser utilizado em estruturas de grafos.
+    /// Representa um hub logístico ou ponto de entrega pertencente à malha de transporte
+    /// da Entrega Máxima Logística S.A. dentro do Sistema de Otimização de Rotas Logísticas (SORL).
+    /// Cada vértice modela uma unidade operacional da rede.
     /// </summary>
-    /// <typeparam name="T">Tipo do dado armazenado no vértice.</typeparam>
+    /// <typeparam name="T">Tipo do dado associado ao hub, como um identificador ou nome.</typeparam>
     public class Vertice<T>
     {
         /// <summary>
-        /// Valor armazenado no vértice.
+        /// Identificador ou informação principal do hub logístico.
+        /// Pode representar um código numérico, sigla ou descrição do ponto de distribuição.
         /// </summary>
         public T Dado { get; set; }
 
         /// <summary>
-        /// Inicializa uma nova instância de um vértice contendo o dado informado.
+        /// Cria um novo hub logístico (vértice) contendo os dados fornecidos.
         /// </summary>
-        /// <param name="dado">Valor a ser armazenado no vértice.</param>
+        /// <param name="dado">Valor que identifica o hub ou ponto de entrega.</param>
         public Vertice(T dado)
         {
             Dado = dado;
         }
 
         /// <summary>
-        /// Retorna uma representação textual do vértice, baseada no valor armazenado.
+        /// Retorna uma representação textual do hub, útil para exibição e depuração.
         /// </summary>
-        /// <returns>String representando o dado do vértice.</returns>
+        /// <returns>Texto contendo o identificador do hub logístico.</returns>
         public override string ToString()
         {
             return Dado.ToString();
