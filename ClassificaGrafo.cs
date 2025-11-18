@@ -33,9 +33,11 @@ namespace TP_GRAFOS
         {
             double densidade = (double)arestas / (vertices * (vertices - 1));
 
-            if (densidade < 0.30)
+            if (densidade < 0.30){
+                Console.WriteLine("Grafo esparso detectado. Utilizando Lista de Adjacência.");
                 return new GrafoListaAdjacencia<T>();
-
+            }
+            Console.WriteLine("Grafo denso detectado. Utilizando Matriz de Adjacência.");
             return new GrafoMatrizAdjacencia<T>(vertices);
         }
     }
