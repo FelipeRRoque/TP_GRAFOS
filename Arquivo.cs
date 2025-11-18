@@ -33,16 +33,17 @@ namespace TP_GRAFOS
         /// <returns>Um grafo populado com todos os vértices e arestas especificados no arquivo.</returns>
         public static IGrafo<int> LerDados(string caminho)
         {
-            var grafo = new Grafo<int>();
             var linhas = File.ReadAllLines(caminho);
 
             var cabecalho = linhas[0].Split(' ');
             int numeroVertices = int.Parse(cabecalho[0]);
             int numeroArestas = int.Parse(cabecalho[1]);
 
+            var grafo = ClassificaGrafo.CriarGrafo<int>(numeroVertices, numeroArestas);
+
             // Adiciona todos os vértices primeiro
             for (int v = 1; v <= numeroVertices; v++)
-                grafo.AdcionarVertice(v);
+                grafo.AdicionarVertice(v);
 
             // Lê todas as arestas
             for (int i = 1; i <= numeroArestas; i++)
@@ -54,7 +55,7 @@ namespace TP_GRAFOS
                 int peso = int.Parse(dados[2]);
                 int capacidade = int.Parse(dados[3]);
 
-                grafo.AdcionarAresta(origem, destino, peso, capacidade);
+                grafo.AdicionarAresta(origem, destino, peso, capacidade);
             }
 
             return grafo;
