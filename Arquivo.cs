@@ -31,7 +31,7 @@ namespace TP_GRAFOS
         /// </summary>
         /// <param name="caminho">Caminho do arquivo a ser lido.</param>
         /// <returns>Um grafo populado com todos os vértices e arestas especificados no arquivo.</returns>
-        public static Grafo<int> LerDados(string caminho)
+        public static IGrafo<int> LerDados(string caminho)
         {
             var grafo = new Grafo<int>();
             var linhas = File.ReadAllLines(caminho);

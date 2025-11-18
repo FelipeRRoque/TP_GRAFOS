@@ -10,7 +10,7 @@ namespace TP_GRAFOS
     /// Permite adicionar vértices, inserir arestas e visualizar a estrutura resultante.
     /// </summary>
     /// <typeparam name="T">Tipo dos valores armazenados nos vértices.</typeparam>
-    public class Grafo<T>
+    public class GrafoListaAdjacencia<T> : IGrafo<T>
     {
         /// <summary>
         /// Lista de adjacência do grafo.
@@ -21,7 +21,7 @@ namespace TP_GRAFOS
         /// <summary>
         /// Cria um grafo vazio.
         /// </summary>
-        public Grafo()
+        public GrafoListaAdjacencia()
         {
             _listaAdjacencia = new Dictionary<Vertice<T>, List<Aresta<T>>>();
         }
@@ -30,12 +30,12 @@ namespace TP_GRAFOS
         /// Adiciona um novo vértice ao grafo, caso ainda não exista.
         /// </summary>
         /// <param name="dado">Valor armazenado no vértice.</param>
-        public void AdcionarVertice(T dado)
+        public void AdicionarVertice(T dado)
         {
             var novoVertice = new Vertice<T>(dado);
 
-            if (!_listaAdjacencia.ContainsKey(novoVertice ))
-                _listaAdjacencia.Add(novoVertice , new List<Aresta<T>>());
+            if (!_listaAdjacencia.ContainsKey(novoVertice))
+                _listaAdjacencia.Add(novoVertice, new List<Aresta<T>>());
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace TP_GRAFOS
         /// <param name="destino">Valor do vértice de destino.</param>
         /// <param name="peso">Peso da aresta.</param>
         /// <param name="capacidade">Capacidade da aresta.</param>
-        public void AdcionarAresta(T origem, T destino, int peso = 1, int capacidade = 0)
+        public void AdicionarAresta(T origem, T destino, int peso = 1, int capacidade = 0)
         {
             var verticeOrigem = EncontrarVertice(origem);
             var verticeDestino = EncontrarVertice(destino);
