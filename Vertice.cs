@@ -27,14 +27,19 @@ namespace TP_GRAFOS
         {
             Dado = dado;
         }
-
-        /// <summary>
-        /// Retorna uma representação textual do hub, útil para exibição e depuração.
-        /// </summary>
-        /// <returns>Texto contendo o identificador do hub logístico.</returns>
         public override string ToString()
         {
             return Dado.ToString();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Vertice<T> v && v.Dado.Equals(Dado);
+        }
+
+        public override int GetHashCode()
+        {
+            return Dado.GetHashCode();
         }
     }
 }

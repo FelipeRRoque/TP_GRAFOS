@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 namespace TP_GRAFOS
 {
     /// <summary>
-    /// Representa um grafo genérico usando lista de adjacência.
-    /// Permite adicionar vértices, inserir arestas e visualizar a estrutura resultante.
+    /// Implementa um grafo direcionado utilizando uma lista de adjacência.
+    /// Cada vértice possui uma lista de arestas que partem dele.
     /// </summary>
     /// <typeparam name="T">Tipo dos valores armazenados nos vértices.</typeparam>
     public class GrafoListaAdjacencia<T> : IGrafo<T>
     {
         /// <summary>
-        /// Lista de adjacência do grafo.
-        /// Cada vértice é associado a uma lista de arestas que saem dele.
+        /// Estrutura principal de armazenamento:
+        /// um dicionário que associa cada vértice à sua lista de arestas.
         /// </summary>
         private readonly Dictionary<Vertice<T>, List<Aresta<T>>> _listaAdjacencia;
 
         /// <summary>
-        /// Cria um grafo vazio.
+        /// Inicializa um grafo vazio utilizando lista de adjacência.
         /// </summary>
         public GrafoListaAdjacencia()
         {
@@ -68,6 +68,26 @@ namespace TP_GRAFOS
             return null;
         }
 
+        /// <summary>
+        /// Retorna a lista completa de vértices do grafo.
+        /// </summary>
+        public List<Vertice<T>> ObterVertices()
+        {
+            return _listaAdjacencia.Keys.ToList();
+        }
+
+        /// <summary>
+        /// Retorna todas as arestas do grafo.
+        /// </summary>
+        public List<Aresta<T>> ObterArestas()
+        {
+            var listaArestas = new List<Aresta<T>>();
+
+            foreach (var arestas in _listaAdjacencia.Values)
+                listaArestas.AddRange(arestas);
+
+            return listaArestas;
+        }
         /// <summary>
         /// Exibe no console a estrutura do grafo: vértices e suas arestas.
         /// </summary>
