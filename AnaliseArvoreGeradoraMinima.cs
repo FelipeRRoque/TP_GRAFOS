@@ -2,27 +2,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace TP_GRAFOS
 {
     public class AnaliseArvoreGeradoraMinima : IAnalises
     {
+        private List<Aresta<int>> _resultadoAGM;
+        public List<Aresta<int>> ResultadoAGM => _resultadoAGM;
+
         public void Executar(IGrafo<int> grafo)
         {
             if (grafo is GrafoListaAdjacencia<int> listaAD)
-                Prim(listaAD);
+                _resultadoAGM = Prim(listaAD);
             else
-                Kruskal(grafo);
+                _resultadoAGM = Kruskal(grafo);
         }
 
-        public void Prim(GrafoListaAdjacencia<int> grafo)
+        public List<Aresta<int>> Prim(GrafoListaAdjacencia<int> grafo)
         {
             var vertices = grafo.ObterVertices();
             var subgrafo = GrafoUtilitario.CriarSubgrafoSomenteVertices(grafo);
 
             int r = vertices[0].Dado;
 
-            var conjuntoVerticesAdicionados = new HashSet<int> { r };
+            var conjuntoVerticesAdicionados = new HashSet<int> { r }; //não deixa repetir vertices
             var conjuntoArestasAdicionadas = new List<Aresta<int>>();
 
             while (conjuntoVerticesAdicionados.Count < vertices.Count)
@@ -35,7 +39,7 @@ namespace TP_GRAFOS
 
                     foreach (var (verticeDestino, peso) in vizinhos)
                     {
-                        if(!conjuntoVerticesAdicionados.Contains(verticeDestino))
+                        if (!conjuntoVerticesAdicionados.Contains(verticeDestino))
                         {
                             if (menorAresta == null || peso < menorAresta.Peso)
                             {
@@ -49,11 +53,41 @@ namespace TP_GRAFOS
                 conjuntoArestasAdicionadas.Add(menorAresta);
                 subgrafo.AdicionarAresta(menorAresta.Origem.Dado, menorAresta.Destino.Dado, menorAresta.Peso, menorAresta.Capacidade);
             }
+            return conjuntoArestasAdicionadas;
         }
 
-        public void Kruskal(IGrafo<int> grafo)
+        public List<Aresta<int>> Kruskal(IGrafo<int> grafo)
         {
-            // Implementação futura
+            /*  var arestasOrdenadas = grafo.ObterArestas();
+            arestasOrdenadas.Sort((a, b) => a.Peso.CompareTo(b.Peso));
+
+            var vertices = grafo.ObterVertices();
+
+            var subgrafo = GrafoUtilitario.CriarSubgrafoSomenteVertices(grafo);
+
+            foreach (var vertice in ListaVertices)
+            {
+
+            }*/
+            return new List<Aresta<int>>();
+        }
+
+        public void ExibirAGM<T>(List<Aresta<T>> arestas)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("\n--- Árvore Geradora Mínima (AGM) ---");
+            int pesoTotal = 0;
+
+            foreach (var aresta in arestas)
+            {
+                sb.AppendLine($"Origem: {aresta.Origem.Dado} -> Destino: {aresta.Destino.Dado} | Peso: {aresta.Peso} | Capacidade: {aresta.Capacidade}");
+                pesoTotal += aresta.Peso;
+            }
+
+            sb.AppendLine($"Peso Total da AGM: {pesoTotal}");
+            sb.AppendLine("-------------------------------------\n");
+
+            Console.WriteLine(sb.ToString());
         }
     }
 }

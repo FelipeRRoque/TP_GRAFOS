@@ -9,9 +9,13 @@ namespace TP_GRAFOS
     {
         static void Main(string[] args)
         {
-            var grafo = Arquivo.LerDados("dataGrafos/grafo05.dimacs");
+            var grafo = Arquivo.LerDados("dataGrafos/grafo01.dimacs");
 
             grafo.ExibirGrafo();
+            
+            var analise = new AnaliseArvoreGeradoraMinima();
+            analise.Executar(grafo);
+            analise.ExibirAGM(analise.ResultadoAGM);
         }
     }
 }
