@@ -89,16 +89,16 @@ namespace TP_GRAFOS
             return listaArestas;
         }
 
-        public List<(T Vizinho, int Peso)> ObterVizinhos(T Vertice)
+        public List<(T Vizinho, int Peso, int Capacidade)> ObterVizinhos(T Vertice)
         {
             var vertice = EncontrarVertice(Vertice);
-            var listaVizinhos = new List<(T Vizinho, int Peso)>();
+            var listaVizinhos = new List<(T Vizinho, int Peso, int Capacidade)>();
 
             if (vertice != null && _listaAdjacencia.ContainsKey(vertice))
             {
                 foreach (var aresta in _listaAdjacencia[vertice])
                 {
-                    listaVizinhos.Add((aresta.Destino.Dado, aresta.Peso));
+                    listaVizinhos.Add((aresta.Destino.Dado, aresta.Peso, aresta.Capacidade));
                 }
             }
 

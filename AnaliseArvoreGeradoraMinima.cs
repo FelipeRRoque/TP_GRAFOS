@@ -8,8 +8,8 @@ namespace TP_GRAFOS
 {
     public class AnaliseArvoreGeradoraMinima : IAnalises
     {
-        private List<Aresta<int>> _resultadoAGM;
-        public List<Aresta<int>> ResultadoAGM => _resultadoAGM;
+        private List<Aresta<int>>? _resultadoAGM;
+        public List<Aresta<int>>? ResultadoAGM => _resultadoAGM;
 
         public void Executar(IGrafo<int> grafo)
         {
@@ -31,23 +31,26 @@ namespace TP_GRAFOS
 
             while (conjuntoVerticesAdicionados.Count < vertices.Count)
             {
-                Aresta<int> menorAresta = null;
+                Aresta<int>? menorAresta = null;
 
                 foreach (var verticeAtual in conjuntoVerticesAdicionados)
                 {
                     var vizinhos = grafo.ObterVizinhos(verticeAtual);
 
-                    foreach (var (verticeDestino, peso) in vizinhos)
+                    foreach (var (verticeDestino, peso, capacidade) in vizinhos)
                     {
                         if (!conjuntoVerticesAdicionados.Contains(verticeDestino))
                         {
                             if (menorAresta == null || peso < menorAresta.Peso)
                             {
-                                menorAresta = new Aresta<int>(new Vertice<int>(verticeAtual), new Vertice<int>(verticeDestino), peso);
+                                menorAresta = new Aresta<int>(new Vertice<int>(verticeAtual), new Vertice<int>(verticeDestino), peso, capacidade);
                             }
                         }
                     }
                 }
+                if (menorAresta == null)
+                    throw new InvalidOperationException("Grafo não é conexo. Prim não pode continuar.");
+                
                 conjuntoVerticesAdicionados.Add(menorAresta.Destino.Dado);
 
                 conjuntoArestasAdicionadas.Add(menorAresta);
