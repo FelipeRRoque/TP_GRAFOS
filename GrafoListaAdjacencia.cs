@@ -51,7 +51,7 @@ namespace TP_GRAFOS
             var verticeDestino = EncontrarVertice(destino);
 
             if (verticeOrigem != null && verticeDestino != null)
-                _listaAdjacencia[verticeOrigem].Add(new Aresta<T>(verticeDestino, peso, capacidade));
+                _listaAdjacencia[verticeOrigem].Add(new Aresta<T>(verticeOrigem, verticeDestino, peso, capacidade));
         }
 
         /// <summary>
@@ -87,6 +87,22 @@ namespace TP_GRAFOS
                 listaArestas.AddRange(arestas);
 
             return listaArestas;
+        }
+
+        public List<(T Vizinho, int Peso)> ObterVizinhos(T Vertice)
+        {
+            var vertice = EncontrarVertice(Vertice);
+            var listaVizinhos = new List<(T Vizinho, int Peso)>();
+
+            if (vertice != null && _listaAdjacencia.ContainsKey(vertice))
+            {
+                foreach (var aresta in _listaAdjacencia[vertice])
+                {
+                    listaVizinhos.Add((aresta.Destino.Dado, aresta.Peso));
+                }
+            }
+
+            return listaVizinhos;
         }
         /// <summary>
         /// Exibe no console a estrutura do grafo: vértices e suas arestas.

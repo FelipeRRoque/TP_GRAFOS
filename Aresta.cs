@@ -17,6 +17,7 @@ namespace TP_GRAFOS
         /// Em um grafo direcionado, indica o sentido da movimentação de carga.
         /// </summary>
         public Vertice<T> Destino { get; set; }
+        public Vertice<T> Origem { get; set; }
 
         /// <summary>
         /// Custo financeiro da rota (em R$) por unidade de carga.
@@ -36,8 +37,9 @@ namespace TP_GRAFOS
         /// <param name="destino">Hub de destino ao qual a carga será transportada.</param>
         /// <param name="peso">Custo financeiro da rota por unidade de carga.</param>
         /// <param name="capacidade">Capacidade máxima de transporte diário da rota (em toneladas).</param>
-        public Aresta(Vertice<T> destino, int peso = 1, int capacidade = 0)
+        public Aresta(Vertice<T> origem, Vertice<T> destino, int peso = 1, int capacidade = 0)
         {
+            Origem = origem;
             Destino = destino;
             Peso = peso;
             Capacidade = capacidade;

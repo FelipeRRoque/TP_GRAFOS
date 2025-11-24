@@ -88,13 +88,22 @@ namespace TP_GRAFOS
         public List<Aresta<T>> ObterArestas()
         {
             var arestas = new List<Aresta<T>>();
-            int indiceVertice = _vertices.FindIndex(v => v.Dado.Equals(dadoVertice));
 
-            for (int j = 0; j < _vertices.Count; j++)
+            for (int i = 0; i < _vertices.Count; i++)
             {
-                if (_matrizPesos[indiceVertice, j] != 0)
+                for (int j = 0; j < _vertices.Count; j++)
                 {
-                    arestas.Add(new Aresta<T>(_vertices[j], _matrizPesos[indiceVertice, j], _matrizCapacidades[indiceVertice, j]));
+                    if (_matrizPesos[i, j] != 0)
+                    {
+                        arestas.Add(
+                            new Aresta<T>(
+                                _vertices[i],
+                                _vertices[j],
+                                _matrizPesos[i, j],
+                                _matrizCapacidades[i, j]
+                                )
+                        );
+                    }
                 }
             }
             return arestas;
