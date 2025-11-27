@@ -14,9 +14,15 @@ namespace TP_GRAFOS
         public void Executar(IGrafo<int> grafo)
         {
             if (grafo is GrafoListaAdjacencia<int> listaAD)
+            {
+                Console.WriteLine("\nExecutando Algoritmo de Prim...");
                 _resultadoAGM = Prim(listaAD);
+            }
             else
+            {
+                Console.WriteLine("\nExecutando Algoritmo de Kruskal...");
                 _resultadoAGM = Kruskal(grafo);
+            }
         }
 
         public List<Aresta<int>> Prim(GrafoListaAdjacencia<int> grafo)
@@ -50,7 +56,7 @@ namespace TP_GRAFOS
                 }
                 if (menorAresta == null)
                     throw new InvalidOperationException("Grafo não é conexo. Prim não pode continuar.");
-                
+
                 conjuntoVerticesAdicionados.Add(menorAresta.Destino.Dado);
 
                 conjuntoArestasAdicionadas.Add(menorAresta);
@@ -61,18 +67,42 @@ namespace TP_GRAFOS
 
         public List<Aresta<int>> Kruskal(IGrafo<int> grafo)
         {
-            /*  var arestasOrdenadas = grafo.ObterArestas();
-            arestasOrdenadas.Sort((a, b) => a.Peso.CompareTo(b.Peso));
+            var arestas = grafo.ObterArestas();
+            arestas.Sort((a, b) => a.Peso.CompareTo(b.Peso));
 
             var vertices = grafo.ObterVertices();
-
             var subgrafo = GrafoUtilitario.CriarSubgrafoSomenteVertices(grafo);
+            var juncoesDosVertices = new Dictionary<int, int>();
 
-            foreach (var vertice in ListaVertices)
+            foreach (var v in vertices)
             {
+                juncoesDosVertices[v.Dado] = v.Dado;
+            }
 
-            }*/
-            return new List<Aresta<int>>();
+            var conjuntoArestasAGM = new List<Aresta<int>>();
+
+            foreach (var aresta in arestas)
+            {
+                int origemJuncao = juncoesDosVertices[aresta.Origem.Dado];
+                int destinoJuncao = juncoesDosVertices[aresta.Destino.Dado];
+
+                if (origemJuncao != destinoJuncao)
+                {
+                    conjuntoArestasAGM.Add(aresta);
+                    subgrafo.AdicionarAresta(aresta.Origem.Dado, aresta.Destino.Dado, aresta.Peso, aresta.Capacidade);
+
+                    foreach (var v in juncoesDosVertices.Keys.ToList())
+                    {
+                        if (juncoesDosVertices[v] == destinoJuncao)
+                        {
+                            juncoesDosVertices[v] = origemJuncao;
+                        }
+                    }
+                }
+                if (conjuntoArestasAGM.Count == vertices.Count - 1)
+                    break;
+            }
+            return conjuntoArestasAGM;
         }
 
         public void ExibirAGM<T>(List<Aresta<T>> arestas)
