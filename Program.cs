@@ -13,9 +13,8 @@ namespace TP_GRAFOS
 
             grafo.ExibirGrafo();
             
-            var analise = new AnaliseArvoreGeradoraMinima();
-            analise.Executar(grafo);
-            analise.ExibirAGM(analise.ResultadoAGM);
+            var analise = new AnaliseArvoreGeradoraMinima(grafo);
+            analise.Executar();
         }
     }
 }

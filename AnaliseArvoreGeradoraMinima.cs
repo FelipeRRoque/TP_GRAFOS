@@ -8,12 +8,17 @@ namespace TP_GRAFOS
 {
     public class AnaliseArvoreGeradoraMinima : IAnalises
     {
+        private readonly IGrafo<int> _grafo;
         private List<Aresta<int>>? _resultadoAGM;
-        public List<Aresta<int>>? ResultadoAGM => _resultadoAGM;
 
-        public void Executar(IGrafo<int> grafo)
+        public AnaliseArvoreGeradoraMinima(IGrafo<int> grafo)
         {
-            if (grafo is GrafoListaAdjacencia<int> listaAD)
+            _grafo = grafo;
+        }
+
+        public void Executar()
+        {
+            if (_grafo is GrafoListaAdjacencia<int> listaAD)
             {
                 Console.WriteLine("\nExecutando Algoritmo de Prim...");
                 _resultadoAGM = Prim(listaAD);
@@ -21,9 +26,10 @@ namespace TP_GRAFOS
             else
             {
                 Console.WriteLine("\nExecutando Algoritmo de Kruskal...");
-                _resultadoAGM = Kruskal(grafo);
+                _resultadoAGM = Kruskal(_grafo);
             }
         }
+
 
         public List<Aresta<int>> Prim(GrafoListaAdjacencia<int> grafo)
         {
