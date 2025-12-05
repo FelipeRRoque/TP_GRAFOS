@@ -38,6 +38,22 @@ namespace TP_GRAFOS
         List<Aresta<T>> ObterArestas();
 
         /// <summary>
+        /// Retorna a lista completa de vertices vizinhos.
+        /// </summary>
+        List<Vertice<T>> ObterVizinhos(Vertice<T> verticeOrigem);
+
+        /// <summary>
+        /// Retorna o peso de uma aresta.
+        /// </summary>
+        int ObterPeso(Vertice<T> origem, Vertice<T> destino);
+
+        /// <summary>
+        /// Retorna a capacidade de uma aresta.
+        /// </summary>
+        int ObterCapacidade(Vertice<T> origem, Vertice<T> destino);
+
+
+        /// <summary>
         /// Exibe no console a estrutura completa do grafo.
         /// </summary>
         void ExibirGrafo();

@@ -109,6 +109,43 @@ namespace TP_GRAFOS
             return arestas;
         }
 
+        public List<Vertice<T>> ObterVizinhos(Vertice<T> verticeOrigem)
+        {
+            var vizinhos = new List<Vertice<T>>();
+
+            int indexOrigem = _vertices.IndexOf(verticeOrigem);
+            if (indexOrigem == -1)
+                return vizinhos;
+
+            for (int j = 0; j < _vertices.Count; j++)
+            {
+                int peso = _matrizPesos[indexOrigem, j];
+
+                // Existe aresta se peso > 0
+                if (peso > 0)
+                {
+                    vizinhos.Add(_vertices[j]);
+                }
+            }
+
+            return vizinhos;
+        }
+
+        public int ObterPeso(Vertice<T> origem, Vertice<T> destino)
+        {
+            int i = _vertices.IndexOf(origem);
+            int j = _vertices.IndexOf(destino);
+            return _matrizPesos[i, j];
+        }
+
+        public int ObterCapacidade(Vertice<T> origem, Vertice<T> destino)
+        {
+            int i = _vertices.IndexOf(origem);
+            int j = _vertices.IndexOf(destino);
+            return _matrizCapacidades[i, j];
+        }
+
+
         /// <summary>
         /// Exibe no console os vértices e suas conexões representadas na matriz de adjacência.
         /// </summary>

@@ -89,21 +89,43 @@ namespace TP_GRAFOS
             return listaArestas;
         }
 
-        public List<(T Vizinho, int Peso, int Capacidade)> ObterVizinhos(T Vertice)
+        public List<Vertice<T>> ObterVizinhos(Vertice<T> verticeOrigem)
         {
-            var vertice = EncontrarVertice(Vertice);
-            var listaVizinhos = new List<(T Vizinho, int Peso, int Capacidade)>();
+            var vizinhos = new List<Vertice<T>>();
 
-            if (vertice != null && _listaAdjacencia.ContainsKey(vertice))
+            if (_listaAdjacencia.TryGetValue(verticeOrigem, out var arestas))
             {
-                foreach (var aresta in _listaAdjacencia[vertice])
-                {
-                    listaVizinhos.Add((aresta.Destino.Dado, aresta.Peso, aresta.Capacidade));
-                }
+                foreach (var aresta in arestas)
+                    vizinhos.Add(aresta.Destino);
             }
 
-            return listaVizinhos;
+            return vizinhos;
         }
+
+        public int ObterPeso(Vertice<T> origem, Vertice<T> destino)
+        {
+            if (_listaAdjacencia.TryGetValue(origem, out var arestas))
+            {
+                foreach (var a in arestas)
+                    if (a.Destino.Equals(destino))
+                        return a.Peso;
+            }
+            return 0;
+        }
+
+        public int ObterCapacidade(Vertice<T> origem, Vertice<T> destino)
+        {
+            if (_listaAdjacencia.TryGetValue(origem, out var arestas))
+            {
+                foreach (var a in arestas)
+                    if (a.Destino.Equals(destino))
+                        return a.Capacidade;
+            }
+            return 0;
+        }
+
+
+
         /// <summary>
         /// Exibe no console a estrutura do grafo: vértices e suas arestas.
         /// </summary>
