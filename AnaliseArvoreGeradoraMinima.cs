@@ -36,38 +36,83 @@ namespace TP_GRAFOS
             var vertices = grafo.ObterVertices();
             var subgrafo = GrafoUtilitario.CriarSubgrafoSomenteVertices(grafo);
 
-            int r = vertices[0].Dado;
+            Vertice<int> r = vertices[0];
 
-            var conjuntoVerticesAdicionados = new HashSet<int> { r }; //não deixa repetir vertices
+            var conjuntoVerticesAdicionados = new HashSet<Vertice<int>> { r }; //não deixa repetir vertices
             var conjuntoArestasAdicionadas = new List<Aresta<int>>();
 
+            //**** Mudei as condicionais dos loops para estarem de acordo com a nova regra do EncontrarVizinhos da interface (Júlio) ****
             while (conjuntoVerticesAdicionados.Count < vertices.Count)
             {
                 Aresta<int>? menorAresta = null;
 
-                foreach (var verticeAtual in conjuntoVerticesAdicionados)
+                foreach (Vertice<int> vAtual in conjuntoVerticesAdicionados)
                 {
-                    var vizinhos = grafo.ObterVizinhos(verticeAtual);
+                    List<Vertice<int>> vizinhos = grafo.ObterVizinhos(vAtual);
 
-                    foreach (var (verticeDestino, peso, capacidade) in vizinhos)
+                    foreach (Vertice<int> vDestino in vizinhos)
                     {
-                        if (!conjuntoVerticesAdicionados.Contains(verticeDestino))
+
+                        if (conjuntoVerticesAdicionados.Contains(vDestino))
+                            continue;
+
+                        int peso = grafo.ObterPeso(vAtual, vDestino);
+                        int capacidade = grafo.ObterCapacidade(vAtual, vDestino);
+
+                        if (peso == int.MaxValue) // caso não exista aresta
+                            continue;
+
+                        if (menorAresta == null || peso < menorAresta.Peso)
                         {
-                            if (menorAresta == null || peso < menorAresta.Peso)
-                            {
-                                menorAresta = new Aresta<int>(new Vertice<int>(verticeAtual), new Vertice<int>(verticeDestino), peso, capacidade);
-                            }
+                            menorAresta = new Aresta<int>(
+                                vAtual,
+                                vDestino,
+                                peso,
+                                capacidade
+                            );
                         }
                     }
                 }
+
                 if (menorAresta == null)
                     throw new InvalidOperationException("Grafo não é conexo. Prim não pode continuar.");
 
-                conjuntoVerticesAdicionados.Add(menorAresta.Destino.Dado);
+                conjuntoVerticesAdicionados.Add(menorAresta.Destino);
 
                 conjuntoArestasAdicionadas.Add(menorAresta);
+
                 subgrafo.AdicionarAresta(menorAresta.Origem.Dado, menorAresta.Destino.Dado, menorAresta.Peso, menorAresta.Capacidade);
             }
+
+            //while (conjuntoVerticesAdicionados.Count < vertices.Count)
+            //{
+            //    Aresta<int>? menorAresta = null;
+
+            //    foreach (var verticeAtual in conjuntoVerticesAdicionados)
+            //    {
+            //        var vizinhos = grafo.ObterVizinhos(verticeAtual);
+
+            //        foreach (var (verticeDestino, peso, capacidade) in vizinhos)
+            //        {
+            //            if (!conjuntoVerticesAdicionados.Contains(verticeDestino))
+            //            {
+            //                if (menorAresta == null || peso < menorAresta.Peso)
+            //                {
+            //                    menorAresta = new Aresta<int>(new Vertice<int>(verticeAtual), new Vertice<int>(verticeDestino), peso, capacidade);
+            //                }
+            //            }
+            //        }
+            //    }
+            //    if (menorAresta == null)
+            //        throw new InvalidOperationException("Grafo não é conexo. Prim não pode continuar.");
+
+            //    conjuntoVerticesAdicionados.Add(menorAresta.Destino.Dado);
+
+            //    conjuntoArestasAdicionadas.Add(menorAresta);
+            //    subgrafo.AdicionarAresta(menorAresta.Origem.Dado, menorAresta.Destino.Dado, menorAresta.Peso, menorAresta.Capacidade);
+            //}
+
+
             return conjuntoArestasAdicionadas;
         }
 
