@@ -108,7 +108,6 @@ namespace TP_GRAFOS
             }
             return arestas;
         }
-
         /// <summary>
         /// Exibe no console os vértices e suas conexões representadas na matriz de adjacência.
         /// </summary>
