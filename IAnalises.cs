@@ -7,6 +7,6 @@ namespace TP_GRAFOS
 {
     public interface IAnalises
     {
-        void Executar(IGrafo<int> grafo);
+        void Executar();
     }
 }
