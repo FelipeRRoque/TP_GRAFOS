@@ -126,6 +126,18 @@ namespace TP_GRAFOS
 
 
 
+        public List<(Vertice<T> Vertice, int grau)> GrausVertices(T Vertice)
+        {
+            var vertice = EncontrarVertice(Vertice);
+            var listaGraus = new List<(Vertice<T>, int)>();
+
+            if (vertice != null)
+            {
+                int dGraus = ObterVizinhos(Vertice).Count;
+                listaGraus.Add((vertice, dGraus));
+            }
+            return listaGraus;
+        }
         /// <summary>
         /// Exibe no console a estrutura do grafo: vértices e suas arestas.
         /// </summary>
