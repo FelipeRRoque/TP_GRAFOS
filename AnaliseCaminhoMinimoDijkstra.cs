@@ -29,7 +29,7 @@ namespace TP_GRAFOS
 
         private Aresta<int> EncontrarProximoVertice()
         {
-
+            return null;
         }
 
         public List<Vertice<int>> Dijkstra(IGrafo<int> grafo, Vertice<int> vertice)
@@ -37,7 +37,7 @@ namespace TP_GRAFOS
             //Inicializa todos os valores de distancias como maxValue e os pais como null.
             List<Vertice<int>> listaVerticesOriginal = grafo.ObterVertices();
             List<Aresta<int>> listaArestasOriginal = grafo.ObterArestas();
-            Aresta<int> menorValor =  ;  
+            Aresta<int> menorValor;  
 
             for (int i = 0; i < listaVerticesOriginal.Count(); i++)
             {
@@ -55,10 +55,10 @@ namespace TP_GRAFOS
             }
 
 
-            
 
 
 
+            return null;
         }
 
     }

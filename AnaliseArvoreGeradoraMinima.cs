@@ -53,23 +53,29 @@ namespace TP_GRAFOS
                     foreach (Vertice<int> vDestino in vizinhos)
                     {
 
-                        if (conjuntoVerticesAdicionados.Contains(vDestino))
-                            continue;
-
-                        int peso = grafo.ObterPeso(vAtual, vDestino);
-                        int capacidade = grafo.ObterCapacidade(vAtual, vDestino);
-
-                        if (peso == int.MaxValue) // caso não exista aresta
-                            continue;
-
-                        if (menorAresta == null || peso < menorAresta.Peso)
+                        bool destinoJaFoiAdicionado = conjuntoVerticesAdicionados.Contains(vDestino);
+                        if (destinoJaFoiAdicionado == false)
                         {
-                            menorAresta = new Aresta<int>(
-                                vAtual,
-                                vDestino,
-                                peso,
-                                capacidade
-                            );
+                            int peso = grafo.ObterPeso(vAtual, vDestino);
+                            int capacidade = grafo.ObterCapacidade(vAtual, vDestino);
+
+                            bool arestaExiste = false;
+                            if (peso != int.MaxValue) arestaExiste = true;
+
+                            if (arestaExiste)
+                            {
+                                bool ehMelhorAresta = (menorAresta == null || peso < menorAresta.Peso);
+
+                                if (ehMelhorAresta)
+                                {
+                                    menorAresta = new Aresta<int>(
+                                        vAtual,
+                                        vDestino,
+                                        peso,
+                                        capacidade
+                                    );
+                                }
+                            }
                         }
                     }
                 }
