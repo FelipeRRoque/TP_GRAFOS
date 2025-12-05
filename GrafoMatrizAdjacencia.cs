@@ -145,6 +145,20 @@ namespace TP_GRAFOS
             return _matrizCapacidades[i, j];
         }
 
+        public List<(Vertice<T> Vertice, int)> ObterGraus()
+        {
+            var listaVertices = ObterVertices();
+            var listaGraus = new List<(Vertice<T> Vertice, int)>();
+
+            foreach (var vertice in listaVertices)
+            {
+                int grau = ObterVizinhos(vertice).Count;
+                listaGraus.Add((vertice, grau));
+            }
+
+            return listaGraus;
+        }
+
 
         /// <summary>
         /// Exibe no console os vértices e suas conexões representadas na matriz de adjacência.

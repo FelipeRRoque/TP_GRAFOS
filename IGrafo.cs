@@ -52,6 +52,10 @@ namespace TP_GRAFOS
         /// </summary>
         int ObterCapacidade(Vertice<T> origem, Vertice<T> destino);
 
+        /// <summary>
+        /// Retorna a lista completa de vertices e seus graus.
+        /// </summary>
+        public List<(Vertice<T> Vertice, int)> ObterGraus();
 
         /// <summary>
         /// Exibe no console a estrutura completa do grafo.

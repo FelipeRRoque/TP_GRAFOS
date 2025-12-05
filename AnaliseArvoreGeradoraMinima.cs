@@ -59,23 +59,12 @@ namespace TP_GRAFOS
                             int peso = grafo.ObterPeso(vAtual, vDestino);
                             int capacidade = grafo.ObterCapacidade(vAtual, vDestino);
 
-                            bool arestaExiste = false;
-                            if (peso != int.MaxValue) arestaExiste = true;
+                        if (peso == int.MaxValue) // caso não exista aresta
+                            continue;
 
-                            if (arestaExiste)
-                            {
-                                bool ehMelhorAresta = (menorAresta == null || peso < menorAresta.Peso);
-
-                                if (ehMelhorAresta)
-                                {
-                                    menorAresta = new Aresta<int>(
-                                        vAtual,
-                                        vDestino,
-                                        peso,
-                                        capacidade
-                                    );
-                                }
-                            }
+                        if (menorAresta == null || peso < menorAresta.Peso)
+                        {
+                            menorAresta = new Aresta<int>(vAtual, vDestino, peso, capacidade);
                         }
                     }
                 }
