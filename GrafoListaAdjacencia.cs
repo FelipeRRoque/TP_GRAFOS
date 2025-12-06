@@ -138,6 +138,7 @@ namespace TP_GRAFOS
             return listaGraus;
         }
 
+
         /// <summary>
         /// Exibe no console a estrutura do grafo: vértices e suas arestas.
         /// </summary>
