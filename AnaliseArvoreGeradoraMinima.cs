@@ -59,66 +59,26 @@ namespace TP_GRAFOS
                             int peso = grafo.ObterPeso(vAtual, vDestino);
                             int capacidade = grafo.ObterCapacidade(vAtual, vDestino);
 
-                            bool arestaExiste = false;
-                            if (peso != int.MaxValue) arestaExiste = true;
+                            if (peso == int.MaxValue) // caso não exista aresta
+                                continue;
 
-                            if (arestaExiste)
+                            if (menorAresta == null || peso < menorAresta.Peso)
                             {
-                                bool ehMelhorAresta = (menorAresta == null || peso < menorAresta.Peso);
-
-                                if (ehMelhorAresta)
-                                {
-                                    menorAresta = new Aresta<int>(
-                                        vAtual,
-                                        vDestino,
-                                        peso,
-                                        capacidade
-                                    );
-                                }
+                                menorAresta = new Aresta<int>(vAtual, vDestino, peso, capacidade);
                             }
                         }
                     }
+
+                    if (menorAresta == null)
+                        throw new InvalidOperationException("Grafo não é conexo. Prim não pode continuar.");
+
+                    conjuntoVerticesAdicionados.Add(menorAresta.Destino);
+
+                    conjuntoArestasAdicionadas.Add(menorAresta);
+
+                    subgrafo.AdicionarAresta(menorAresta.Origem.Dado, menorAresta.Destino.Dado, menorAresta.Peso, menorAresta.Capacidade);
                 }
-
-                if (menorAresta == null)
-                    throw new InvalidOperationException("Grafo não é conexo. Prim não pode continuar.");
-
-                conjuntoVerticesAdicionados.Add(menorAresta.Destino);
-
-                conjuntoArestasAdicionadas.Add(menorAresta);
-
-                subgrafo.AdicionarAresta(menorAresta.Origem.Dado, menorAresta.Destino.Dado, menorAresta.Peso, menorAresta.Capacidade);
             }
-
-            //while (conjuntoVerticesAdicionados.Count < vertices.Count)
-            //{
-            //    Aresta<int>? menorAresta = null;
-
-            //    foreach (var verticeAtual in conjuntoVerticesAdicionados)
-            //    {
-            //        var vizinhos = grafo.ObterVizinhos(verticeAtual);
-
-            //        foreach (var (verticeDestino, peso, capacidade) in vizinhos)
-            //        {
-            //            if (!conjuntoVerticesAdicionados.Contains(verticeDestino))
-            //            {
-            //                if (menorAresta == null || peso < menorAresta.Peso)
-            //                {
-            //                    menorAresta = new Aresta<int>(new Vertice<int>(verticeAtual), new Vertice<int>(verticeDestino), peso, capacidade);
-            //                }
-            //            }
-            //        }
-            //    }
-            //    if (menorAresta == null)
-            //        throw new InvalidOperationException("Grafo não é conexo. Prim não pode continuar.");
-
-            //    conjuntoVerticesAdicionados.Add(menorAresta.Destino.Dado);
-
-            //    conjuntoArestasAdicionadas.Add(menorAresta);
-            //    subgrafo.AdicionarAresta(menorAresta.Origem.Dado, menorAresta.Destino.Dado, menorAresta.Peso, menorAresta.Capacidade);
-            //}
-
-
             return conjuntoArestasAdicionadas;
         }
 
