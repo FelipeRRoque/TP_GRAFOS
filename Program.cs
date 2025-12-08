@@ -96,10 +96,10 @@ namespace TP_GRAFOS
 
                         case "5":
                             Console.WriteLine("\nPercurso de Rotas");
-                            // new AnalisarCaminhoEuleriano(grafo).Executar();
+                            new AnalisarCaminhoEuleriano(grafo).Executar();
 
                             Console.WriteLine("\nPercurso de Hubs");
-                            // new AnalisarCaminhoHamiltoniano(grafo).Executar();
+                            new AnalisarCaminhoHamiltoniano(grafo).Executar();
                             break;
 
                         default:
