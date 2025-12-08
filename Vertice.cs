@@ -39,7 +39,7 @@ namespace TP_GRAFOS
 
         public override int GetHashCode()
         {
-            return Dado.GetHashCode();
+            return base.GetHashCode();
         }
     }
 }
