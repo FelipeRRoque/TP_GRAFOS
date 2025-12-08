@@ -159,6 +159,43 @@ namespace TP_GRAFOS
             return listaGraus;
         }
 
+        /*public GrafoMatrizAdjacencia<string> GerarGrafoDeConflitos(GrafoMatrizAdjacencia<T> grafoOriginal)
+        {
+            var arestasOriginais = grafoOriginal.ObterArestas();
+            var grafoConflitos = new GrafoMatrizAdjacencia<string>(arestasOriginais.Count);
+
+            foreach (var arestas in arestasOriginais)
+            {
+                string rota = $"{arestas.Origem.Dado}-{arestas.Destino.Dado}";
+                grafoConflitos.AdicionarVertice(rota);
+            }
+            var verticesConflitos = grafoConflitos.ObterVertices();
+
+            for (int i = 0; i < arestasOriginais.Count; i++)
+            {
+                for (int j = i + 1; j < arestasOriginais.Count; j++)
+                {
+                    var arestaA = arestasOriginais[i];
+                    var arestaB = arestasOriginais[j];
+
+                    bool haConflito =
+                        arestaA.Origem.Equals(arestaB.Origem) ||
+                        arestaA.Origem.Equals(arestaB.Destino) ||
+                        arestaA.Destino.Equals(arestaB.Origem) ||
+                        arestaA.Destino.Equals(arestaB.Destino);
+
+                    if (haConflito)
+                    {
+                        string rotaA = $"{arestaA.Origem.Dado}-{arestaA.Destino.Dado}";
+                        string rotaB = $"{arestaB.Origem.Dado}-{arestaB.Destino.Dado}";
+
+                        grafoConflitos.AdicionarAresta(rotaA, rotaB);
+                        grafoConflitos.AdicionarAresta(rotaB, rotaA);
+                    }
+                }
+            }
+            return grafoConflitos;
+        }*/
 
         /// <summary>
         /// Exibe no console os vértices e suas conexões representadas na matriz de adjacência.

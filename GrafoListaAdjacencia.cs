@@ -134,11 +134,47 @@ namespace TP_GRAFOS
                 int grau = ObterVizinhos(vertice).Count;
                 listaGraus.Add((vertice, grau));
             }
-            
+
             return listaGraus;
         }
 
+        /*public GrafoListaAdjacencia<string> GerarGrafoDeConflitos(GrafoListaAdjacencia<T> grafoOriginal)
+        {
+            var grafoConflitos = new GrafoListaAdjacencia<string>();
+            var arestasOriginais = grafoOriginal.ObterArestas();
 
+            foreach (var arestas in arestasOriginais)
+            {
+                string rota = $"{arestas.Origem.Dado}-{arestas.Destino.Dado}";
+                grafoConflitos.AdicionarVertice(rota);
+            }
+            var verticesConflitos = grafoConflitos.ObterVertices();
+
+            for (int i = 0; i < arestasOriginais.Count; i++)
+            {
+                for (int j = i + 1; j < arestasOriginais.Count; j++)
+                {
+                    var arestaA = arestasOriginais[i];
+                    var arestaB = arestasOriginais[j];
+
+                    bool haConflito =
+                        arestaA.Origem.Equals(arestaB.Origem) ||
+                        arestaA.Origem.Equals(arestaB.Destino) ||
+                        arestaA.Destino.Equals(arestaB.Origem) ||
+                        arestaA.Destino.Equals(arestaB.Destino);
+
+                    if (haConflito)
+                    {
+                        string rotaA = $"{arestaA.Origem.Dado}-{arestaA.Destino.Dado}";
+                        string rotaB = $"{arestaB.Origem.Dado}-{arestaB.Destino.Dado}";
+
+                        grafoConflitos.AdicionarAresta(rotaA, rotaB);
+                        grafoConflitos.AdicionarAresta(rotaB, rotaA);
+                    }
+                }
+            }
+            return grafoConflitos;
+        }*/
         /// <summary>
         /// Exibe no console a estrutura do grafo: vértices e suas arestas.
         /// </summary>

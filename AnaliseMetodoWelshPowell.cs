@@ -18,7 +18,9 @@ namespace TP_GRAFOS
         /// <summary>
         /// Grafo fornecido para análise e coloração.
         /// </summary>
-        private readonly IGrafo<int> _grafo;
+        private readonly IGrafo<string> _grafo;
+
+        private Dictionary<Vertice<string>, string> colorir;
 
         /// <summary>
         /// Inicializa a análise Welsh-Powell com um grafo específico.
@@ -27,9 +29,10 @@ namespace TP_GRAFOS
         /// Estrutura de grafo que será utilizada para execução do algoritmo.
         /// O grafo deve permitir a obtenção dos graus dos vértices e seus vizinhos.
         /// </param>
-        public AnaliseMetodoWelshPowell(IGrafo<int> grafo)
+        public AnaliseMetodoWelshPowell(IGrafo<string> grafo)
         {
             _grafo = grafo;
+            colorir = new Dictionary<Vertice<string>, string>();
         }
 
         /// <summary>
@@ -48,49 +51,61 @@ namespace TP_GRAFOS
         /// </summary>
         public void Executar()
         {
+            WelshPowell();
+            ExibirResultado();
+        }
+
+        public void WelshPowell()
+        {
             var listaGrausDecrescente = _grafo.ObterGraus()
                 .OrderByDescending(v => v.Item2).Select(v => v.Item1).ToList();
 
-            string[] cores = { "Vermelho", "Amarelo", "Laranja", "Verde", "Azul", "Roxo", "Rosa", "Cinza" };
+            colorir = new Dictionary<Vertice<string>, string>();
 
-            var colorir = new Dictionary<Vertice<int>, string>();
-
-            int corIndice = 0;
+            int turno = 1;
 
             while (colorir.Count < listaGrausDecrescente.Count)
             {
-                string corAtual = cores[corIndice];
+                string turnoAtual = $"Turno {turno}";
 
                 foreach (var vertice in listaGrausDecrescente)
                 {
                     if (colorir.ContainsKey(vertice))
                         continue;
 
-                    bool temConflitoDeCor = false;
+                    bool temConflitoDeTurno = false;
 
-                    var vizinhos = _grafo.ObterVizinhos(vertice);
-
-                    foreach (var vizinho in vizinhos)
+                    foreach (var vizinho in _grafo.ObterVizinhos(vertice))
                     {
-                        if (colorir.ContainsKey(vizinho) && colorir[vizinho] == corAtual)
+                        if (colorir.ContainsKey(vizinho) && colorir[vizinho] == turnoAtual)
                         {
-                            temConflitoDeCor = true;
+                            temConflitoDeTurno = true;
                             break;
                         }
                     }
 
-                    if (!temConflitoDeCor)
-                        colorir[vertice] = corAtual;
+                    if (!temConflitoDeTurno)
+                        colorir[vertice] = turnoAtual;
                 }
-                corIndice++;
+                turno++;
             }
-
+        }
+        public void ExibirResultado()
+        {
             var sb = new StringBuilder();
             sb.AppendLine("\n--- Método de Welsh-Powell ---");
+            sb.AppendLine("\n--- Agendamentos de Manutenções por turnos: ---");
 
-            foreach (var itens in colorir)
+            var agrupadoPorTurno = colorir.GroupBy(x => x.Value).OrderBy(x => x.Key);
+
+            foreach (var grupo in agrupadoPorTurno)
             {
-                sb.AppendLine($"Vértice {itens.Key.Dado} -> Cor: {itens.Value}");
+                sb.AppendLine($"[{grupo.Key}]:");
+                foreach (var item in grupo)
+                {
+                    sb.AppendLine($"   - Manutenção na Rota: {item.Key.Dado}");
+                }
+                sb.AppendLine();
             }
             sb.AppendLine("-------------------------------------\n");
 

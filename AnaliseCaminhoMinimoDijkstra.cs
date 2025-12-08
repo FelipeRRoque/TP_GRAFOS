@@ -74,14 +74,14 @@ namespace TP_GRAFOS
                     return;
                 }
 
-                naoVisitado.Remove(v); 
+                naoVisitado.Remove(v);
 
 
                 foreach (Vertice<int> w in grafo.ObterVizinhos(v))
                 {
                     int peso = grafo.ObterPeso(v, w);
 
-                    if (naoVisitado.Contains(w)) 
+                    if (naoVisitado.Contains(w))
                     {
                         int novaDistancia = _distancia[v] + peso;
 
@@ -115,7 +115,7 @@ namespace TP_GRAFOS
                 {
                     atual = _predecessor[atual];
                 }
-          
+
             }
 
             Console.WriteLine($"Caminho Mínimo de {_origem.Dado} para {_destino.Dado}:");
