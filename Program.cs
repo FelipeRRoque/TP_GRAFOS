@@ -9,7 +9,7 @@ namespace TP_GRAFOS
     {
         static void Main(string[] args)
         {
-            var grafo = Arquivo.LerDados("dataGrafos/grafo03.dimacs");
+            var grafo = Arquivo.LerDados("dataGrafos/grafo07.dimacs");
 
             grafo.ExibirGrafo();
             

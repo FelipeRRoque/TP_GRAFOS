@@ -28,6 +28,7 @@ namespace TP_GRAFOS
                 Console.WriteLine("\nExecutando Algoritmo de Kruskal...");
                 _resultadoAGM = Kruskal(_grafo);
             }
+            ExibirAGM(_resultadoAGM);
         }
 
 
@@ -53,8 +54,8 @@ namespace TP_GRAFOS
                     foreach (Vertice<int> vDestino in vizinhos)
                     {
 
-                        bool destinoJaFoiAdicionado = conjuntoVerticesAdicionados.Contains(vDestino);
-                        if (destinoJaFoiAdicionado == false)
+                        //bool destinoJaFoiAdicionado = conjuntoVerticesAdicionados.Contains(vDestino);
+                        if (!conjuntoVerticesAdicionados.Contains(vDestino))
                         {
                             int peso = grafo.ObterPeso(vAtual, vDestino);
                             int capacidade = grafo.ObterCapacidade(vAtual, vDestino);
@@ -68,16 +69,15 @@ namespace TP_GRAFOS
                             }
                         }
                     }
-
-                    if (menorAresta == null)
-                        throw new InvalidOperationException("Grafo não é conexo. Prim não pode continuar.");
-
-                    conjuntoVerticesAdicionados.Add(menorAresta.Destino);
-
-                    conjuntoArestasAdicionadas.Add(menorAresta);
-
-                    subgrafo.AdicionarAresta(menorAresta.Origem.Dado, menorAresta.Destino.Dado, menorAresta.Peso, menorAresta.Capacidade);
                 }
+                if (menorAresta == null)
+                    throw new InvalidOperationException("Grafo não é conexo. Prim não pode continuar.");
+
+                conjuntoVerticesAdicionados.Add(menorAresta.Destino);
+
+                conjuntoArestasAdicionadas.Add(menorAresta);
+
+                subgrafo.AdicionarAresta(menorAresta.Origem.Dado, menorAresta.Destino.Dado, menorAresta.Peso, menorAresta.Capacidade);
             }
             return conjuntoArestasAdicionadas;
         }
