@@ -47,7 +47,7 @@ namespace TP_GRAFOS
             return verticeMinimo;
         }
 
-        public void Dijkstra(IGrafo<int> grafo, Vertice<int> verticeOriginal)
+        private void Dijkstra(IGrafo<int> grafo, Vertice<int> verticeOriginal)
         {
             List<Vertice<int>> listaVerticesOriginal = grafo.ObterVertices();
 
@@ -95,7 +95,7 @@ namespace TP_GRAFOS
             }
         }
 
-        public void ExibirResultado()
+        private void ExibirResultado()
         {
             // Verifica se o destino foi alcançado
             if (!_distancia.ContainsKey(_destino) || _distancia[_destino] == int.MaxValue)
