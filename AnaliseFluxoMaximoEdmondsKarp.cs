@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TP_GRAFOS
 {
@@ -34,47 +32,50 @@ namespace TP_GRAFOS
         {
             foreach (Aresta<int> e in _arestas)
             {
-                if (!_fluxos.ContainsKey(e))
-                {
-                    _fluxos.Add(e, 0);
-                }
+                if (!_fluxos.ContainsKey(e)) _fluxos.Add(e, 0);
             }
 
             ConstruirRedeResidual();
 
-            Dictionary<Vertice<int>, Vertice<int>> predecessores;
+            List<Aresta<int>>? p = CaminhoAumentanteMenosArestas();
 
-            List<Aresta<int>> p = CaminhoAumentanteMenosArestas(out predecessores);
+            int delta = (p != null && p.Count > 0) ? CalcularDelta(p) : 0;
 
-            while (p != null && p.Count > 0)
+            while (p != null && p.Count > 0 && delta > 0)
             {
-                int delta = CalcularDelta(p);
+                _fluxoMaximo += delta;
 
-                if (delta > 0)
-                {
-                    _fluxoMaximo += delta; 
+                AtualizarRedeResidual(p, delta);
 
-                    AtualizarRedeResidual(p, delta);
-                }
+                p = CaminhoAumentanteMenosArestas();
 
-                p = CaminhoAumentanteMenosArestas(out predecessores);
+                delta = (p != null && p.Count > 0) ? CalcularDelta(p) : 0;
             }
+        }
+
+
+        private List<Aresta<int>>? CaminhoAumentanteMenosArestas()
+        {
+            Func<Vertice<int>, Vertice<int>, bool> regraDeFluxo = (u, v) =>
+            {
+                if (_capacidadeResidual.TryGetValue((u, v), out int capacidade))
+                {
+                    return capacidade > 0;
+                }
+                return false;
+            };
+
+            return BuscaEmLargura.EncontrarCaminho(_grafo, _origem, _destino, regraDeFluxo);
         }
 
         private int CalcularDelta(List<Aresta<int>> caminhoAumentante)
         {
             int delta = int.MaxValue;
-
             foreach (Aresta<int> aresta in caminhoAumentante)
             {
-                int capacidadeResidual = ObterCapacidadeResidualDaAresta(aresta);
-
-                if (capacidadeResidual < delta)
-                {
-                    delta = capacidadeResidual;
-                }
+                int capacidade = ObterCapacidadeResidualDaAresta(aresta);
+                if (capacidade < delta) delta = capacidade;
             }
-
             return delta;
         }
 
@@ -90,11 +91,9 @@ namespace TP_GRAFOS
         private void ConstruirRedeResidual()
         {
             _capacidadeResidual.Clear();
-
             foreach (Aresta<int> e in _arestas)
             {
-                 _capacidadeResidual[(e.Origem, e.Destino)] = e.Capacidade;
-
+                _capacidadeResidual[(e.Origem, e.Destino)] = e.Capacidade;
                 if (!_capacidadeResidual.ContainsKey((e.Destino, e.Origem)))
                 {
                     _capacidadeResidual.Add((e.Destino, e.Origem), 0);
@@ -110,35 +109,22 @@ namespace TP_GRAFOS
                 Vertice<int> w = arestaResidual.Destino;
 
                 _capacidadeResidual[(v, w)] -= delta;
-
                 _capacidadeResidual[(w, v)] += delta;
 
-                Aresta<int>? arestaOriginalDireta = _arestas
-                    .FirstOrDefault(e => e.Origem.Equals(v) && e.Destino.Equals(w));
-
-                if (arestaOriginalDireta != null)
+                Aresta<int>? originalDireta = _arestas.FirstOrDefault(e => e.Origem.Equals(v) && e.Destino.Equals(w));
+                if (originalDireta != null)
                 {
-                    _fluxos[arestaOriginalDireta] += delta;
+                    _fluxos[originalDireta] += delta;
                 }
                 else
                 {
-                    Aresta<int>? arestaOriginalReversa = _arestas
-                        .FirstOrDefault(e => e.Origem.Equals(w) && e.Destino.Equals(v));
-
-                    if (arestaOriginalReversa != null)
+                    Aresta<int>? originalReversa = _arestas.FirstOrDefault(e => e.Origem.Equals(w) && e.Destino.Equals(v));
+                    if (originalReversa != null)
                     {
-                        _fluxos[arestaOriginalReversa] -= delta;
+                        _fluxos[originalReversa] -= delta;
                     }
                 }
             }
-        }
-
-        private List<Aresta<int>>? CaminhoAumentanteMenosArestas(out Dictionary<Vertice<int>, Vertice<int>> predecessores)
-        {
-            predecessores = new Dictionary<Vertice<int>, Vertice<int>>();
-            Queue<Vertice<int>> fila = new Queue<Vertice<int>>();
-            HashSet<Vertice<int>> visitados = new HashSet<Vertice<int>>();
-            return null;
         }
 
         private void ExibirResultado()
@@ -146,7 +132,6 @@ namespace TP_GRAFOS
             Console.WriteLine("--- Análise de Fluxo Máximo (Edmonds-Karp) ---");
             Console.WriteLine($"Fonte: {_origem.Dado}, Sumidouro: {_destino.Dado}");
             Console.WriteLine($"Fluxo Máximo Total Encontrado: {_fluxoMaximo}");
-
             Console.WriteLine("\nFluxo por Aresta Original:");
             foreach (var par in _fluxos)
             {
