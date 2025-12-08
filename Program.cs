@@ -5,11 +5,11 @@ namespace TP_GRAFOS
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.WriteLine("=== Sistema de Otimização de Rotas Logísticas ===");
+            Console.WriteLine("=== Sistema de OtimizaÃ§Ã£o de Rotas LogÃ­sticas ===");
 
             while (true)
             {
-                PrintHeader("Seleção de Grafos");
+                PrintHeader("SeleÃ§Ã£o de Grafos");
 
                 Console.WriteLine("Escolha um grafo para analisar:");
                 Console.WriteLine("1) Grafo 1");
@@ -21,20 +21,20 @@ namespace TP_GRAFOS
                 Console.WriteLine("7) Grafo 7");
                 Console.WriteLine("0) Encerrar programa");
 
-                Console.Write("\nOpção: ");
+                Console.Write("\nOpÃ§Ã£o: ");
                 string opcGrafo = Console.ReadLine()?.Trim();
                 Console.WriteLine();
 
                 if (opcGrafo == "0")
                 {
-                    Console.WriteLine("Encerrando execução...");
+                    Console.WriteLine("Encerrando execuÃ§Ã£o...");
                     return;
                 }
 
-                // validar número
+                // validar nÃºmero
                 if (!int.TryParse(opcGrafo, out int grafoEscolhido) || grafoEscolhido < 1 || grafoEscolhido > 7)
                 {
-                    Console.WriteLine("Opção inválida. Escolha um número de 1 a 7 ou 0 para sair.");
+                    Console.WriteLine("OpÃ§Ã£o invÃ¡lida. Escolha um nÃºmero de 1 a 7 ou 0 para sair.");
                     continue;
                 }
 
@@ -54,20 +54,20 @@ namespace TP_GRAFOS
                 // exibir grafo
                 grafo.ExibirGrafo();
 
-                // --- MENU DE OPERAÇÕES DO GRAFO ---
+                // --- MENU DE OPERAÃ‡Ã•ES DO GRAFO ---
                 while (true)
                 {
-                    PrintHeader($"Operações - Grafo {grafoEscolhido}");
+                    PrintHeader($"OperaÃ§Ãµes - Grafo {grafoEscolhido}");
 
-                    Console.WriteLine("Escolha uma operação:");
+                    Console.WriteLine("Escolha uma operaÃ§Ã£o:");
                     Console.WriteLine("1) Roteamento de Menor Custo");
-                    Console.WriteLine("2) Capacidade Máxima de Escoamento");
-                    Console.WriteLine("3) Expansão da Rede de Comunicação");
-                    Console.WriteLine("4) Agendamento de Manutenções sem Conflito");
-                    Console.WriteLine("5) Rota Única de Inspeção");
+                    Console.WriteLine("2) Capacidade MÃ¡xima de Escoamento");
+                    Console.WriteLine("3) ExpansÃ£o da Rede de ComunicaÃ§Ã£o");
+                    Console.WriteLine("4) Agendamento de ManutenÃ§Ãµes sem Conflito");
+                    Console.WriteLine("5) Rota Ãºnica de InspeÃ§Ã£o");
                     Console.WriteLine("0) Voltar para escolha de grafos");
 
-                    Console.Write("\nOpção: ");
+                    Console.Write("\nOpÃ§Ã£o: ");
                     string opcAnalise = Console.ReadLine()?.Trim();
 
                     if (opcAnalise == "0") break; // volta para a escolha de grafos
@@ -92,19 +92,19 @@ namespace TP_GRAFOS
 
                         case "5":
                             Console.WriteLine("\nPercurso de Rotas");
-                            new AnalisarCaminhoEuleriano(grafo).Executar();
+                            // new AnalisarCaminhoEuleriano(grafo).Executar();
 
                             Console.WriteLine("\nPercurso de Hubs");
-                            new AnalisarCaminhoHamiltoniano(grafo).Executar();
+                            // new AnalisarCaminhoHamiltoniano(grafo).Executar();
                             break;
 
                         default:
-                            Console.WriteLine("Opção inválida. Escolha uma das opções listadas.");
+                            Console.WriteLine("OpÃ§Ã£o invÃ¡lida. Escolha uma das opÃ§Ãµes listadas.");
                             break;
                     }
 
-                    // permitir nova operação
-                    Console.Write("\nDeseja executar outra operação para este grafo? (S/N): ");
+                    // permitir nova operaÃ§Ã£o
+                    Console.Write("\nDeseja executar outra operÃ§Ã£o para este grafo? (S/N): ");
                     string repetir = Console.ReadLine()?.Trim().ToUpper();
 
                     if (repetir != "S") break;
@@ -112,7 +112,7 @@ namespace TP_GRAFOS
             }
         }
 
-        // ---------------- FUNÇÕES AUXILIARES ----------------
+        // ---------------- FUNÃ‡Ã•ES AUXILIARES ----------------
 
         private static void PrintHeader(string titulo)
         {
