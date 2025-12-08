@@ -34,12 +34,12 @@ namespace TP_GRAFOS
 
         public override bool Equals(object obj)
         {
-            return obj is Vertice<T> v && v.Dado.Equals(Dado);
+            return ReferenceEquals(this, obj);
         }
 
         public override int GetHashCode()
         {
-            return Dado.GetHashCode();
+            return base.GetHashCode();
         }
     }
 }
