@@ -87,7 +87,11 @@ namespace TP_GRAFOS
                             break;
 
                         case "4":
-                            new AnaliseMetodoWelshPowell(grafo).Executar();
+                            IGrafo<string> grafoConflitos = GrafoUtilitario.GerarGrafoDeConflitos(grafo);
+                            Console.WriteLine($" -> Conflitos mapeados: {grafoConflitos.ObterVertices().Count} nós de tarefa.");
+
+                            var analiseWP = new AnaliseMetodoWelshPowell(grafoConflitos);
+                            analiseWP.Executar();
                             break;
 
                         case "5":
