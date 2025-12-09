@@ -106,6 +106,9 @@ namespace TP_GRAFOS
             return arestas;
         }
 
+        /// <summary>
+        /// Retorna uma lista contendo todos os vizinhos de um vertice.
+        /// </summary>
         public List<Vertice<T>> ObterVizinhos(Vertice<T> verticeOrigem)
         {
             var vizinhos = new List<Vertice<T>>();
@@ -118,7 +121,6 @@ namespace TP_GRAFOS
             {
                 int peso = _matrizPesos[indexOrigem, j];
 
-                // Existe aresta se peso > 0
                 if (peso > 0)
                 {
                     vizinhos.Add(_vertices[j]);
@@ -128,13 +130,18 @@ namespace TP_GRAFOS
             return vizinhos;
         }
 
+        /// <summary>
+        /// Retorna o peso de uma arestas.
+        /// </summary>
         public int ObterPeso(Vertice<T> origem, Vertice<T> destino)
         {
             int i = _vertices.IndexOf(origem);
             int j = _vertices.IndexOf(destino);
             return _matrizPesos[i, j];
         }
-
+        /// <summary>
+        /// Retorna a capacidade de uma aresta.
+        /// </summary>
         public int ObterCapacidade(Vertice<T> origem, Vertice<T> destino)
         {
             int i = _vertices.IndexOf(origem);
@@ -142,6 +149,9 @@ namespace TP_GRAFOS
             return _matrizCapacidades[i, j];
         }
 
+        /// <summary>
+        /// Retorna uma lista de gaus com todos os vértices do grafo.
+        /// </summary>
         public List<(Vertice<T> Vertice, int)> ObterGraus()
         {
             var listaVertices = ObterVertices();
@@ -176,10 +186,8 @@ namespace TP_GRAFOS
                         );
                     }
                 }
-
                 grafoStringfado.AppendLine();
             }
-
             return grafoStringfado.ToString();
         }
     }

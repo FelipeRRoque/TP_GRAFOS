@@ -51,7 +51,12 @@ namespace TP_GRAFOS
             WelshPowell();
             return ExibirResultado();
         }
-
+        /// <summary>
+        /// Implementa o algoritmo Welsh-Powell para alocar turnos (cores)
+        /// a cada vértice do grafo com o menor número possível de conflitos.
+        /// Atribui turnos crescentes garantindo que vértices adjacentes
+        /// nunca compartilhem o mesmo turno.
+        /// </summary>
         public void WelshPowell()
         {
             var listaGrausDecrescente = _grafo.ObterGraus()

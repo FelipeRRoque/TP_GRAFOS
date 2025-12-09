@@ -44,28 +44,42 @@ namespace TP_GRAFOS
         }
 
         /// <summary>
-        /// Agora retorna uma string contendo tudo que seria impresso no console.
+        /// Método principal da análise. Determina qual algoritmo deve ser utilizado (Prim ou Kruskal)
+        /// com base na estrutura do grafo e retorna um relatório textual descrevendo o resultado da AGM.
         /// </summary>
         public string Executar()
         {
             var sb = new StringBuilder();
 
-            if (_grafo is GrafoListaAdjacencia<int> listaAD)
+            try
             {
-                sb.AppendLine("\nExecutando Algoritmo de Prim...");
-                _resultadoAGM = Prim(listaAD);
-            }
-            else
-            {
-                sb.AppendLine("\nExecutando Algoritmo de Kruskal...");
-                _resultadoAGM = Kruskal(_grafo);
-            }
+                if (_grafo is GrafoListaAdjacencia<int> listaAD)
+                {
+                    sb.AppendLine("\nExecutando Algoritmo de Prim...");
+                    _resultadoAGM = Prim(listaAD);
+                }
+                else
+                {
+                    sb.AppendLine("\nExecutando Algoritmo de Kruskal...");
+                    _resultadoAGM = Kruskal(_grafo);
+                }
 
-            sb.Append(ExibirAGM(_resultadoAGM));
+                sb.Append(ExibirAGM(_resultadoAGM));
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine("\n--- ERRO NA EXECUÇÃO DA AGM ---");
+                sb.AppendLine($"Mensagem: {ex.Message}");
+            }
+            
             return sb.ToString();
         }
 
-
+        /// <summary>
+        /// Executa o algoritmo de Prim sobre um grafo representado por lista de adjacência.
+        /// Constrói gradualmente a árvore selecionando sempre a menor aresta que expande o conjunto
+        /// de vértices já conectados, evitando ciclos. Retorna todas as arestas que compõem a árvore mínima.
+        /// </summary>
         public List<Aresta<int>> Prim(GrafoListaAdjacencia<int> grafo)
         {
             var vertices = grafo.ObterVertices();
@@ -120,6 +134,11 @@ namespace TP_GRAFOS
             return conjuntoArestasAdicionadas;
         }
 
+        /// <summary>
+        /// Executa o algoritmo de Kruskal sobre o grafo fornecido. O método ordena as arestas por peso
+        /// e usa um conjunto disjunto simplificado para evitar ciclos, adicionando apenas arestas que
+        /// conectem componentes distintos. Retorna a lista de arestas que compõem a AGM.
+        /// </summary>
         public List<Aresta<int>> Kruskal(IGrafo<int> grafo)
         {
             var arestas = grafo.ObterArestas();
