@@ -75,11 +75,21 @@ namespace TP_GRAFOS
                     switch (opcAnalise)
                     {
                         case "1":
-                            // new AnaliseCaminhoMinimoDijkstra(grafo).Executar();
+                            Console.WriteLine("Defina os pontos para análise de Distância:");
+                            Vertice<int> origemDijkstra = ObterVerticeUsuario(grafo, "Origem");
+                            Vertice<int> destinoDijkstra = ObterVerticeUsuario(grafo, "Destino");
+
+                            if (origemDijkstra != null && destinoDijkstra != null)
+                            {
+                                RegistradorGrafo.Registrar(
+                                    grafoEscolhido,
+                                    new AnaliseCaminhoMinimoDijkstra(grafo, origemDijkstra, destinoDijkstra).Executar()
+                                    );
+                            }
                             break;
 
                         case "2":
-                            // new AnaliseFluxoMaximoEdmondsKarp(grafo).Executar();
+                            //new AnaliseFluxoMaximoEdmondsKarp(grafo).Executar();
                             break;
 
                         case "3":
@@ -87,7 +97,6 @@ namespace TP_GRAFOS
                                 grafoEscolhido,
                                 new AnaliseArvoreGeradoraMinima(grafo).Executar()
                             );
-
                             break;
 
                         case "4":
@@ -132,6 +141,28 @@ namespace TP_GRAFOS
         private static void PrintHeader(string titulo)
         {
             Console.WriteLine($"\n========== {titulo} ==========");
+        }
+        private static Vertice<int> ObterVerticeUsuario(IGrafo<int> grafo, string nomeTipo)
+        {
+            while (true)
+            {
+                Console.Write($"Digite o ID do Vértice {nomeTipo} (ou 'sair' para pular): ");
+                string input = Console.ReadLine();
+
+                if (input.ToLower() == "sair") return null;
+
+                if (int.TryParse(input, out int id))
+                {
+                    var vertice = grafo.ObterVertices().FirstOrDefault(v => v.Dado == id);
+                    if (vertice != null) return vertice;
+
+                    Console.WriteLine($"[Erro] O vértice {id} não existe no grafo.");
+                }
+                else
+                {
+                    Console.WriteLine("[Erro] Digite um número inteiro válido.");
+                }
+            }
         }
     }
 }
