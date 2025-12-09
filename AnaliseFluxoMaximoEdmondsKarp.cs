@@ -2,6 +2,55 @@
 
 namespace TP_GRAFOS
 {
+
+    /// <summary>
+    ///
+    /// Esta classe implementa o algoritmo de **Edmonds–Karp**, uma versão do método
+    /// de Ford–Fulkerson que utiliza **busca em largura (BFS)** para encontrar caminhos
+    /// aumentantes na rede residual, permitindo o cálculo do **fluxo máximo** entre um
+    /// vértice de origem e um vértice destino.
+    ///
+    /// 1) Fluxo geral da análise:
+    /// - O método <see cref="Executar"/> inicia o processo chamando
+    ///   <see cref="EdmondsKarp"/>, que controla toda a lógica de expansão do fluxo.
+    /// - Ao finalizar, <see cref="ExibirResultado"/> monta e retorna uma string com:
+    ///     • fluxo máximo total encontrado;  
+    ///     • fluxos efetivamente utilizados em cada aresta;  
+    ///     • detalhes da configuração da rede.
+    ///
+    /// 2) Estrutura interna do algoritmo:
+    /// - <see cref="EdmondsKarp"/>:
+    ///     • Inicializa o dicionário de fluxos e constrói a rede residual por meio
+    ///       de <see cref="ConstruirRedeResidual"/>;  
+    ///     • Repetidamente encontra caminhos aumentantes usando
+    ///       <see cref="CaminhoAumentanteMenosArestas"/>, que emprega BFS para localizar
+    ///       caminhos válidos com capacidade residual positiva;  
+    ///     • Calcula o aumento possível no fluxo (delta) com
+    ///       <see cref="CalcularDelta"/>;  
+    ///     • Atualiza a rede residual e os fluxos reais via
+    ///       <see cref="AtualizarRedeResidual"/>;  
+    ///     • Repete até não existirem mais caminhos aumentantes.
+    ///
+    /// 3) Rede residual e regras de fluxo:
+    /// - A rede residual é construída e mantida através de
+    ///   <see cref="ConstruirRedeResidual"/> e atualizada por
+    ///   <see cref="AtualizarRedeResidual"/>.  
+    /// - Para cada aresta (u → v):  
+    ///     - capacidade residual forward diminui conforme o fluxo cresce;  
+    ///     - capacidade residual reverse aumenta, permitindo desfazer fluxos.
+    ///
+    /// 3) BFS para encontrar caminhos aumentantes:
+    /// - <see cref="CaminhoAumentanteMenosArestas"/> usa BFS (via
+    ///   <c>BuscaEmLargura.EncontrarCaminho</c>) para garantir sempre o menor número de arestas,
+    ///   resultando em maior eficiência e garantindo complexidade O(V·E²).
+    ///
+    /// 4) Finalização:
+    /// - O método <see cref="ExibirResultado"/> retorna o relatório completo,
+    ///   detalhando o fluxo máximo e listando todas as arestas que efetivamente
+    ///   transportaram fluxo.
+    ///   
+    /// </summary>
+
     internal class AnaliseFluxoMaximoEdmondsKarp : IAnalises
     {
         private IGrafo<int> _grafo;

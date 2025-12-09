@@ -3,10 +3,34 @@ using System.Text;
 namespace TP_GRAFOS
 {
     /// <summary>
-    /// Implementa o algoritmo de coloração de grafos Welsh-Powell, utilizado para 
-    /// minimizar o número de cores necessárias para colorir um grafo sem que 
-    /// vértices adjacentes compartilhem a mesma cor.
+    ///
+    /// Esta classe implementa o algoritmo de coloração de grafos **Welsh-Powell**,  
+    /// usado para minimizar o número de "cores" (neste caso, turnos) atribuídas a um grafo,
+    /// garantindo que vértices adjacentes nunca recebam a mesma cor.
+    ///
+    /// 1) Fluxo geral da análise:
+    /// - O método <see cref="Executar"/> inicia o processo, chamando o algoritmo principal
+    ///   <see cref="WelshPowell"/> e, em seguida, formatando o resultado por meio de
+    ///   <see cref="ExibirResultado"/>.
+    /// - O algoritmo realiza uma coloração gulosa baseada na ordem dos graus dos vértices.
+    ///
+    /// 2) Funcionamento interno do algoritmo:
+    /// - <see cref="WelshPowell"/>:
+    ///     • Obtém os graus de todos os vértices através de <c>_grafo.ObterGraus()</c>;
+    ///     • Ordena os vértices em ordem decrescente de grau (regra principal do método);
+    ///     • Percorre os vértices e tenta atribuir cada um ao turno corrente;
+    ///     • Verifica conflitos observando se algum vizinho já recebeu a mesma cor;
+    ///     • Caso não haja conflito, atribui o turno ao vértice;
+    ///     • Caso contrário, ele será tentado novamente no próximo turno.
+    ///
+    /// 3) Formatação final:
+    /// - <see cref="ExibirResultado"/> monta e retorna uma string descrevendo:
+    ///     • Cada turno criado,
+    ///     • Quais vértices pertencem a cada turno,
+    ///     • Em um formato organizado e adequado para exibição ou registro em log.
+    ///     
     /// </summary>
+
     public class AnaliseMetodoWelshPowell : IAnalises
     {
         private readonly IGrafo<string> _grafo;

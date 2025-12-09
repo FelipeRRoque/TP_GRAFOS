@@ -2,6 +2,42 @@
 
 namespace TP_GRAFOS
 {
+
+    /// <summary>
+    ///
+    /// Esta classe implementa o algoritmo de **Dijkstra** para encontrar o caminho
+    /// mínimo entre dois vértices em um grafo ponderado.  
+    /// A análise calcula as menores distâncias a partir da origem, reconstrói o
+    /// caminho final até o destino e retorna todo o resultado em formato textual.
+    ///
+    /// 1) Fluxo geral da execução:
+    /// - O método <see cref="Executar"/> inicia o processo chamando
+    ///   <see cref="Dijkstra(IGrafo{int}, Vertice{int})"/> para calcular distâncias
+    ///   e predecessores.
+    /// - Após o cálculo, o caminho final é reconstruído e formatado por
+    ///   <see cref="ExibirResultado"/>.
+    ///
+    /// 2) Funcionamento interno do algoritmo:
+    /// - <see cref="Dijkstra(IGrafo{int}, Vertice{int})"/>:
+    ///     • Inicializa as distâncias como infinito e o predecessor como nulo para todos os vértices;
+    ///     • Define a distância da origem como 0;
+    ///     • Mantém um conjunto de vértices não visitados;
+    ///     • A cada passo, seleciona o vértice com a menor distância atual usando
+    ///       <see cref="EncontrarVerticeMenorDistancia"/>;  
+    ///     • Relaxa as arestas atualizando a distância e predecessor dos vizinhos quando necessário;
+    ///     • Encerra quando todos os vértices alcançáveis forem processados.
+    ///
+    /// 3) Reconstrução do caminho:
+    /// - <see cref="ExibirResultado"/> utiliza o dicionário de predecessores
+    ///   para voltar do destino até a origem, reconstruindo o caminho mínimo.
+    /// - O método também monta uma string contendo:
+    ///     • A distância mínima encontrada,
+    ///     • A sequência de vértices do caminho final,
+    ///     • Ou uma mensagem dizendo que não existe caminho.
+    ///     
+    /// </summary>
+
+
     public class AnaliseCaminhoMinimoDijkstra : IAnalises
     {
         private Vertice<int> _origem;

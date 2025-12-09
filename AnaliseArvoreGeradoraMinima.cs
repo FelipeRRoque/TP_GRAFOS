@@ -2,6 +2,37 @@ using System.Text;
 
 namespace TP_GRAFOS
 {
+    /// <summary>
+    ///
+    /// Esta classe realiza a análise de Árvore Geradora Mínima (AGM) sobre um grafo,
+    /// escolhendo automaticamente entre os algoritmos de **Prim** ou **Kruskal**,
+    /// dependendo da estrutura de armazenamento do grafo fornecido.
+    ///
+    /// 1) Fluxo básico da execução:
+    /// - O método <see cref="Executar"/> inicia o processo e identifica qual algoritmo usar:
+    ///     • Se o grafo for baseado em lista de adjacência, utiliza o algoritmo **Prim**.
+    ///     • Caso contrário, utiliza o algoritmo **Kruskal**.
+    /// - Após o cálculo, o resultado da AGM é formatado pelo método <see cref="ExibirAGM"/>.
+    ///
+    /// 2) Implementações internas:
+    /// - <see cref="Prim(GrafoListaAdjacencia{int})"/>:
+    ///     • Seleciona um vértice inicial e cresce a árvore escolhendo sempre a aresta
+    ///       de menor peso que conecta a árvore parcial a um novo vértice.
+    ///     • Garante que nenhum ciclo é criado adicionando somente vértices ainda não visitados.
+    ///     • Continua até incluir todos os vértices do grafo.
+    ///
+    /// - <see cref="Kruskal(IGrafo{int})"/>:
+    ///     • Ordena todas as arestas por peso crescente.
+    ///     • Utiliza união de componentes (union-find simplificado) para garantir que
+    ///       nenhuma aresta forme ciclo.
+    ///     • Adiciona arestas até obter uma árvore com (n − 1) arestas.
+    ///
+    /// 3) Finalização:
+    /// - O método <see cref="ExibirAGM{T}(List{Aresta{T}})"/> monta e retorna uma string
+    ///   contendo todas as arestas escolhidas e o peso total da AGM.
+    ///   
+    /// </summary>
+
     public class AnaliseArvoreGeradoraMinima : IAnalises
     {
         private readonly IGrafo<int> _grafo;

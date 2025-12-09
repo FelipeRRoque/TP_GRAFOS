@@ -84,12 +84,24 @@ namespace TP_GRAFOS
                                 RegistradorGrafo.Registrar(
                                     grafoEscolhido,
                                     new AnaliseCaminhoMinimoDijkstra(grafo, origemDijkstra, destinoDijkstra).Executar()
-                                    );
+                                );
                             }
                             break;
 
                         case "2":
-                            //new AnaliseFluxoMaximoEdmondsKarp(grafo).Executar();
+                            Console.WriteLine("Defina a orgiem e o destino para cálculo de capacidade de escoamento:");
+
+                            Vertice<int> origemEdmondsKarp = ObterVerticeUsuario(grafo, "Origem");
+                            Vertice<int> destinoEdmondsKarp = ObterVerticeUsuario(grafo, "Destino");
+
+                            if (origemEdmondsKarp != null && destinoEdmondsKarp != null)
+                            {
+                                RegistradorGrafo.Registrar(
+                                    grafoEscolhido,
+                                    new AnaliseFluxoMaximoEdmondsKarp(grafo, origemEdmondsKarp, destinoEdmondsKarp).Executar()
+                                );
+                            }
+
                             break;
 
                         case "3":
@@ -97,6 +109,7 @@ namespace TP_GRAFOS
                                 grafoEscolhido,
                                 new AnaliseArvoreGeradoraMinima(grafo).Executar()
                             );
+
                             break;
 
                         case "4":
