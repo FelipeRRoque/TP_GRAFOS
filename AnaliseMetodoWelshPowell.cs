@@ -59,7 +59,7 @@ namespace TP_GRAFOS
         /// </summary>
         public void WelshPowell()
         {
-            var listaGrausDecrescente = _grafo.ObterGraus()
+            List<Vertice<string>> listaGrausDecrescente = _grafo.ObterGraus()
                 .OrderByDescending(v => v.Item2)
                 .Select(v => v.Item1)
                 .ToList();
@@ -107,7 +107,11 @@ namespace TP_GRAFOS
 
             var agrupadoPorTurno = colorir
                 .GroupBy(x => x.Value)
-                .OrderBy(x => x.Key);
+                .OrderBy(x =>
+                {
+                    int numeroTurno = int.Parse(x.Key.Replace("Turno ", ""));
+                    return numeroTurno;
+                });
 
             foreach (var grupo in agrupadoPorTurno)
             {

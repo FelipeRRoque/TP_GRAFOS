@@ -47,7 +47,7 @@ namespace TP_GRAFOS
 
             return subgrafo;
         }
-        
+
         /// <summary>
         /// Gera um grafo de conflitos a partir das arestas do grafo original.
         /// Cada aresta se torna um vértice no novo grafo, e duas arestas são
@@ -63,7 +63,7 @@ namespace TP_GRAFOS
         /// <returns>Um grafo onde cada vértice representa uma rota com possíveis conflitos.</returns>
         public static IGrafo<string> GerarGrafoDeConflitos<T>(IGrafo<T> grafoOriginal)
         {
-            var arestasOriginais = grafoOriginal.ObterArestas();
+            List<Aresta<T>> arestasOriginais = grafoOriginal.ObterArestas();
             var grafoConflitos = new GrafoMatrizAdjacencia<string>(arestasOriginais.Count);
 
             foreach (var arestas in arestasOriginais)

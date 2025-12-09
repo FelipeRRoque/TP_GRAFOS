@@ -71,7 +71,7 @@ namespace TP_GRAFOS
                 sb.AppendLine("\n--- ERRO NA EXECUÇÃO DA AGM ---");
                 sb.AppendLine($"Mensagem: {ex.Message}");
             }
-            
+
             return sb.ToString();
         }
 
@@ -82,13 +82,13 @@ namespace TP_GRAFOS
         /// </summary>
         public List<Aresta<int>> Prim(GrafoListaAdjacencia<int> grafo)
         {
-            var vertices = grafo.ObterVertices();
+            List<Vertice<int>> vertices = grafo.ObterVertices();
             var subgrafo = GrafoUtilitario.CriarSubgrafoSomenteVertices(grafo);
 
             Vertice<int> r = vertices[0];
 
-            var conjuntoVerticesAdicionados = new HashSet<Vertice<int>> { r };
-            var conjuntoArestasAdicionadas = new List<Aresta<int>>();
+            HashSet<Vertice<int>> conjuntoVerticesAdicionados = new HashSet<Vertice<int>> { r };
+            List<Aresta<int>> conjuntoArestasAdicionadas = new List<Aresta<int>>();
 
             while (conjuntoVerticesAdicionados.Count < vertices.Count)
             {
@@ -141,17 +141,17 @@ namespace TP_GRAFOS
         /// </summary>
         public List<Aresta<int>> Kruskal(IGrafo<int> grafo)
         {
-            var arestas = grafo.ObterArestas();
+            List<Aresta<int>> arestas = grafo.ObterArestas();
             arestas.Sort((a, b) => a.Peso.CompareTo(b.Peso));
 
-            var vertices = grafo.ObterVertices();
+            List<Vertice<int>> vertices = grafo.ObterVertices();
             var subgrafo = GrafoUtilitario.CriarSubgrafoSomenteVertices(grafo);
-            var juncoesDosVertices = new Dictionary<int, int>();
+            Dictionary<int, int> juncoesDosVertices = new Dictionary<int, int>();
 
             foreach (var v in vertices)
                 juncoesDosVertices[v.Dado] = v.Dado;
 
-            var conjuntoArestasAGM = new List<Aresta<int>>();
+            List<Aresta<int>> conjuntoArestasAGM = new List<Aresta<int>>();
 
             foreach (var aresta in arestas)
             {

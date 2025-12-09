@@ -78,7 +78,7 @@ namespace TP_GRAFOS
         /// </summary>
         public List<Aresta<T>> ObterArestas()
         {
-            var listaArestas = new List<Aresta<T>>();
+            List<Aresta<T>> listaArestas = new List<Aresta<T>>();
 
             foreach (var arestas in _listaAdjacencia.Values)
                 listaArestas.AddRange(arestas);
@@ -91,7 +91,7 @@ namespace TP_GRAFOS
         /// </summary>
         public List<Vertice<T>> ObterVizinhos(Vertice<T> verticeOrigem)
         {
-            var vizinhos = new List<Vertice<T>>();
+            List<Vertice<T>> vizinhos = new List<Vertice<T>>();
 
             if (_listaAdjacencia.TryGetValue(verticeOrigem, out var arestas))
             {
@@ -135,7 +135,7 @@ namespace TP_GRAFOS
         /// </summary>
         public List<(Vertice<T> Vertice, int)> ObterGraus()
         {
-            var listaVertices = ObterVertices();
+            List<Vertice<T>> listaVertices = ObterVertices();
             var listaGraus = new List<(Vertice<T> Vertice, int)>();
 
             foreach (var vertice in listaVertices)
