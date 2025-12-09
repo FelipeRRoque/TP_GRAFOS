@@ -52,7 +52,7 @@ namespace TP_GRAFOS
                 }
 
                 // exibir grafo
-                grafo.ExibirGrafo();
+                RegistradorGrafo.Registrar(grafoEscolhido, grafo.ExibirGrafo());
 
                 // --- MENU DE OPERAÇÕES DO GRAFO ---
                 while (true)
@@ -83,23 +83,34 @@ namespace TP_GRAFOS
                             break;
 
                         case "3":
-                            new AnaliseArvoreGeradoraMinima(grafo).Executar();
+                            RegistradorGrafo.Registrar(
+                                grafoEscolhido,
+                                new AnaliseArvoreGeradoraMinima(grafo).Executar()
+                            );
+
                             break;
 
                         case "4":
                             IGrafo<string> grafoConflitos = GrafoUtilitario.GerarGrafoDeConflitos(grafo);
-                            Console.WriteLine($" -> Conflitos mapeados: {grafoConflitos.ObterVertices().Count} nós de tarefa.");
 
-                            var analiseWP = new AnaliseMetodoWelshPowell(grafoConflitos);
-                            analiseWP.Executar();
+                            RegistradorGrafo.Registrar(
+                                grafoEscolhido,
+                                $" -> Conflitos mapeados: {grafoConflitos.ObterVertices().Count} nós de tarefa.\n{new AnaliseMetodoWelshPowell(grafoConflitos).Executar()}"
+                            );
+
                             break;
 
                         case "5":
-                            Console.WriteLine("\nPercurso de Rotas");
-                            new AnalisarCaminhoEuleriano(grafo).Executar();
+                            RegistradorGrafo.Registrar(
+                                grafoEscolhido,
+                                $"\nPercurso de Rotas\n{new AnalisarCaminhoEuleriano(grafo).Executar()}"
+                            );
 
-                            Console.WriteLine("\nPercurso de Hubs");
-                            new AnalisarCaminhoHamiltoniano(grafo).Executar();
+                            RegistradorGrafo.Registrar(
+                                grafoEscolhido,
+                                $"\nPercurso de Hubs\n{new AnalisarCaminhoHamiltoniano(grafo).Executar()}"
+                            );
+
                             break;
 
                         default:

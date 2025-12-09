@@ -1,4 +1,6 @@
-﻿namespace TP_GRAFOS
+﻿using System.Text;
+
+namespace TP_GRAFOS
 {
 
     /// <summary>
@@ -21,8 +23,8 @@
     /// - Carregar todos os vizinhos do grafo  
     /// - Testar método exato (<see cref="BacktrackHamilton"/>) para grafos pequenos  
     /// - Caso contrário, aplicar heurística (<see cref="HeuristicaHamiltoniana"/>)  
-    /// - Exibir caminho encontrado, verificando se forma ciclo se a última aresta reconectar ao início.
-    /// </summary
+    /// - Retornar string com o caminho encontrado.
+    /// </summary>
 
     public class AnalisarCaminhoHamiltoniano : IAnalises
     {
@@ -33,34 +35,43 @@
             _grafo = grafo;
         }
 
-        public void Executar()
+        // Alterado de void para string para retornar o conteúdo acumulado
+        public string Executar()
         {
-            Console.WriteLine("=== Caminho / Ciclo Hamiltoniano ===\n");
-            VerificarHamiltoniano();
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=== Caminho / Ciclo Hamiltoniano ===\n");
+
+            // Passa o StringBuilder para os métodos internos preencherem
+            VerificarHamiltoniano(sb);
+
+            return sb.ToString();
         }
 
-        private void VerificarHamiltoniano()
+        private void VerificarHamiltoniano(StringBuilder sb)
         {
             var vertices = _grafo.ObterVertices();
             int n = vertices.Count;
 
             if (n == 0)
             {
-                Console.WriteLine("Grafo vazio.");
+                sb.AppendLine("Grafo vazio.");
                 return;
             }
 
             if (n > 20)
             {
-                Console.WriteLine($"Grafo com {n} vértices — busca exata é inviável. Usando heurística.");
+                sb.AppendLine($"Grafo com {n} vértices — busca exata é inviável. Usando heurística.");
                 var heuristica = HeuristicaHamiltoniana(vertices);
 
                 if (heuristica != null)
                 {
-                    Console.WriteLine("Caminho Hamiltoniano encontrado (heurística):");
-                    Imprimir(heuristica);
+                    sb.AppendLine("Caminho Hamiltoniano encontrado (heurística):");
+                    Imprimir(heuristica, sb);
                 }
-                else Console.WriteLine("Nenhum caminho Hamiltoniano encontrado (heurística).");
+                else
+                {
+                    sb.AppendLine("Nenhum caminho Hamiltoniano encontrado (heurística).");
+                }
 
                 return;
             }
@@ -76,17 +87,17 @@
 
                 if (BacktrackHamilton(inicio, inicio, visited, path, adj, n, false))
                 {
-                    Console.WriteLine("Caminho Hamiltoniano encontrado:");
-                    Imprimir(path);
+                    sb.AppendLine("Caminho Hamiltoniano encontrado:");
+                    Imprimir(path, sb);
 
                     if (adj[path.Last()].Contains(path.First()))
-                        Console.WriteLine("Este caminho forma um ciclo Hamiltoniano.");
+                        sb.AppendLine("Este caminho forma um ciclo Hamiltoniano.");
 
                     return;
                 }
             }
 
-            Console.WriteLine("Nenhum caminho Hamiltoniano encontrado.");
+            sb.AppendLine("Nenhum caminho Hamiltoniano encontrado.");
         }
 
         private bool BacktrackHamilton(
@@ -160,14 +171,15 @@
             return null;
         }
 
-        private void Imprimir(List<Vertice<int>> caminho)
+        // Método auxiliar agora recebe o StringBuilder
+        private void Imprimir(List<Vertice<int>> caminho, StringBuilder sb)
         {
             for (int i = 0; i < caminho.Count; i++)
             {
-                Console.Write(caminho[i].Dado);
-                if (i < caminho.Count - 1) Console.Write(" -> ");
+                sb.Append(caminho[i].Dado);
+                if (i < caminho.Count - 1) sb.Append(" -> ");
             }
-            Console.WriteLine("\n");
+            sb.AppendLine("\n");
         }
     }
 }

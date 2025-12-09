@@ -1,6 +1,7 @@
-﻿namespace TP_GRAFOS
-{
+﻿using System.Text;
 
+namespace TP_GRAFOS
+{
     /// <summary>
     /// Classe responsável por analisar a existência de caminho ou ciclo Euleriano em um grafo direcionado.
     /// 
@@ -21,9 +22,9 @@
     ///    - Realizada em <see cref="ConstruirEuleriano"/>  
     ///    - O algoritmo percorre cada aresta exatamente uma vez, utilizando pilha e recuo controlado.
     /// 
-    /// 4) Impressão do resultado  
+    /// 4) Retorno do resultado  
     ///    - Executada dentro de <see cref="VerificarEuleriano"/>  
-    ///    - Mostra se o grafo possui CAMINHO ou CICLO Euleriano e imprime o percurso final.
+    ///    - Retorna uma string informando se o grafo possui CAMINHO ou CICLO Euleriano e o percurso final.
     /// </summary>
 
     public class AnalisarCaminhoEuleriano : IAnalises
@@ -35,18 +36,25 @@
             _grafo = grafo;
         }
 
-        public void Executar()
+        // Alterado de void para string para retornar o conteúdo
+        public string Executar()
         {
-            Console.WriteLine("=== Caminho / Ciclo Euleriano ===\n");
-            VerificarEuleriano();
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=== Caminho / Ciclo Euleriano ===\n");
+
+            // Passamos o StringBuilder para o método preencher
+            VerificarEuleriano(sb);
+
+            return sb.ToString();
         }
 
-        private void VerificarEuleriano()
+        // O método agora recebe o StringBuilder para acumular as mensagens
+        private void VerificarEuleriano(StringBuilder sb)
         {
             var vertices = _grafo.ObterVertices();
             if (vertices == null || vertices.Count == 0)
             {
-                Console.WriteLine("Grafo vazio. Não há caminho nem ciclo Euleriano.");
+                sb.AppendLine("Grafo vazio. Não há caminho nem ciclo Euleriano.");
                 return;
             }
 
@@ -109,34 +117,35 @@
 
             if (anyNonIsolated == null)
             {
-                Console.WriteLine("Grafo sem arestas. Há ciclo Euleriano trivial.");
+                sb.AppendLine("Grafo sem arestas. Há ciclo Euleriano trivial.");
                 return;
             }
 
             if (!ConectadoIgnorandoDirecao(anyNonIsolated, vertices, inDegree, outDegree))
             {
-                Console.WriteLine("Grafo não é conexo quanto às arestas. Não existe caminho/ciclo Euleriano.");
+                sb.AppendLine("Grafo não é conexo quanto às arestas. Não existe caminho/ciclo Euleriano.");
                 return;
             }
 
             if (!hasEulerCycle && !hasEulerPath)
             {
-                Console.WriteLine("Não existe caminho nem ciclo Euleriano.");
+                sb.AppendLine("Não existe caminho nem ciclo Euleriano.");
                 return;
             }
 
             Vertice<int> inicio = startVertex ?? anyNonIsolated;
             var caminho = ConstruirEuleriano(inicio);
 
-            Console.WriteLine(hasEulerCycle ? "Existe CICLO Euleriano." : "Existe CAMINHO Euleriano.");
-            Console.WriteLine("Percurso Euleriano:");
-            Console.Write("  ");
+            sb.AppendLine(hasEulerCycle ? "Existe CICLO Euleriano." : "Existe CAMINHO Euleriano.");
+            sb.AppendLine("Percurso Euleriano:");
+            sb.Append("  ");
+
             for (int i = 0; i < caminho.Count; i++)
             {
-                Console.Write(caminho[i].Dado);
-                if (i < caminho.Count - 1) Console.Write(" -> ");
+                sb.Append(caminho[i].Dado);
+                if (i < caminho.Count - 1) sb.Append(" -> ");
             }
-            Console.WriteLine("\n");
+            sb.AppendLine("\n");
         }
 
         private bool ConectadoIgnorandoDirecao(

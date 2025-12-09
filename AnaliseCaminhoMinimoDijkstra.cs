@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace TP_GRAFOS
 {
     public class AnaliseCaminhoMinimoDijkstra : IAnalises
     {
-
         private Vertice<int> _origem;
         private Vertice<int> _destino;
         private IGrafo<int> _grafo;
         private Dictionary<Vertice<int>, int> _distancia = new Dictionary<Vertice<int>, int>();
         private Dictionary<Vertice<int>, Vertice<int>> _predecessor = new Dictionary<Vertice<int>, Vertice<int>>();
-
 
         public AnaliseCaminhoMinimoDijkstra(IGrafo<int> grafo, Vertice<int> origem, Vertice<int> destino)
         {
@@ -23,11 +17,13 @@ namespace TP_GRAFOS
             _destino = destino;
         }
 
-
-        public void Executar()
+        /// <summary>
+        /// Executa o Dijkstra e retorna o texto que antes era exibido no console.
+        /// </summary>
+        public string Executar()
         {
             Dijkstra(_grafo, _origem);
-            ExibirResultado();
+            return ExibirResultado();
         }
 
         private Vertice<int> EncontrarVerticeMenorDistancia(List<Vertice<int>> naoVisitados)
@@ -51,31 +47,24 @@ namespace TP_GRAFOS
         {
             List<Vertice<int>> listaVerticesOriginal = grafo.ObterVertices();
 
-            //Inicializa todos os valores de distancias como maxValue e os pais como null.
             foreach (Vertice<int> vertice in listaVerticesOriginal)
             {
                 _distancia[vertice] = int.MaxValue;
                 _predecessor[vertice] = null;
             }
+
             _distancia[verticeOriginal] = 0;
 
-            //(V - S)
             List<Vertice<int>> naoVisitado = new List<Vertice<int>>(listaVerticesOriginal);
-
 
             while (naoVisitado.Count > 0)
             {
                 Vertice<int> v = EncontrarVerticeMenorDistancia(naoVisitado);
 
-                //Se o vértice de menor distância é nulo ou a distância é infinita, 
-                //significa que o resto do grafo é inacessível.
                 if (v == null || _distancia[v] == int.MaxValue)
-                {
                     return;
-                }
 
                 naoVisitado.Remove(v);
-
 
                 foreach (Vertice<int> w in grafo.ObterVizinhos(v))
                 {
@@ -95,16 +84,19 @@ namespace TP_GRAFOS
             }
         }
 
-        private void ExibirResultado()
+        /// <summary>
+        /// Agora retorna o texto ao invés de imprimir.
+        /// </summary>
+        private string ExibirResultado()
         {
-            // Verifica se o destino foi alcançado
+            var sb = new StringBuilder();
+
             if (!_distancia.ContainsKey(_destino) || _distancia[_destino] == int.MaxValue)
             {
-                Console.WriteLine($"Não foi encontrado um caminho de {_origem.Dado} para {_destino.Dado}.");
-                return;
+                sb.AppendLine($"Não foi encontrado um caminho de {_origem.Dado} para {_destino.Dado}.");
+                return sb.ToString();
             }
 
-            // Constrói o caminho retrocedendo a partir do predecessor
             var caminho = new Stack<Vertice<int>>();
             Vertice<int> atual = _destino;
 
@@ -115,27 +107,26 @@ namespace TP_GRAFOS
                 {
                     atual = _predecessor[atual];
                 }
-
+                else break;
             }
 
-            Console.WriteLine($"Caminho Mínimo de {_origem.Dado} para {_destino.Dado}:");
-            Console.WriteLine($"Distância Total: {_distancia[_destino]}");
-            Console.Write("Caminho: ");
+            sb.AppendLine($"Caminho Mínimo de {_origem.Dado} para {_destino.Dado}:");
+            sb.AppendLine($"Distância Total: {_distancia[_destino]}");
+
+            sb.Append("Caminho: ");
 
             while (caminho.Count > 0)
             {
-                Console.Write(caminho.Pop().Dado);
+                sb.Append(caminho.Pop().Dado);
                 if (caminho.Count > 0)
-                {
-                    Console.Write(" - ");
-                }
+                    sb.Append(" - ");
                 else
-                {
-                    Console.Write(".");
-                }
+                    sb.Append(".");
             }
-            Console.WriteLine();
-        }
 
+            sb.AppendLine();
+
+            return sb.ToString();
+        }
     }
 }

@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace TP_GRAFOS
 {
@@ -200,24 +197,28 @@ namespace TP_GRAFOS
         /// <summary>
         /// Exibe no console os vértices e suas conexões representadas na matriz de adjacência.
         /// </summary>
-        public void ExibirGrafo()
+        public string ExibirGrafo()
         {
+            StringBuilder grafoStringfado = new StringBuilder("");
+
             for (int i = 0; i < _vertices.Count; i++)
             {
-                Console.Write($"{_vertices[i].Dado}: ");
+                grafoStringfado.Append($"{_vertices[i].Dado}: ");
 
                 for (int j = 0; j < _vertices.Count; j++)
                 {
                     if (_matrizPesos[i, j] != 0)
                     {
-                        Console.Write(
+                        grafoStringfado.Append(
                             $" -> {_vertices[j].Dado} (Peso: {_matrizPesos[i, j]}, Capacidade: {_matrizCapacidades[i, j]})"
                         );
                     }
                 }
 
-                Console.WriteLine();
+                grafoStringfado.AppendLine();
             }
+
+            return grafoStringfado.ToString();
         }
     }
 }

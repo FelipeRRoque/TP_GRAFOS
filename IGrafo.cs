@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace TP_GRAFOS
 {
     /// <summary>
@@ -60,6 +55,6 @@ namespace TP_GRAFOS
         /// <summary>
         /// Exibe no console a estrutura completa do grafo.
         /// </summary>
-        void ExibirGrafo();
+        string ExibirGrafo();
     }
 }

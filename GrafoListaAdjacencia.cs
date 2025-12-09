@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace TP_GRAFOS
 {
@@ -178,17 +175,21 @@ namespace TP_GRAFOS
         /// <summary>
         /// Exibe no console a estrutura do grafo: vértices e suas arestas.
         /// </summary>
-        public void ExibirGrafo()
+        public string ExibirGrafo()
         {
+            StringBuilder grafoStringfado = new StringBuilder("");
+
             foreach (var vertice in _listaAdjacencia)
             {
-                Console.Write($"Vértice {vertice.Key.Dado}: ");
+                grafoStringfado.Append($"Vértice {vertice.Key.Dado}: ");
 
                 foreach (var aresta in vertice.Value)
-                    Console.Write($"-> {aresta.Destino.Dado} (Peso: {aresta.Peso} | Capacidade: {aresta.Capacidade}) ");
+                    grafoStringfado.Append($"-> {aresta.Destino.Dado} (Peso: {aresta.Peso} | Capacidade: {aresta.Capacidade}) ");
 
-                Console.WriteLine();
+                grafoStringfado.AppendLine();
             }
+
+            return grafoStringfado.ToString();
         }
     }
 }

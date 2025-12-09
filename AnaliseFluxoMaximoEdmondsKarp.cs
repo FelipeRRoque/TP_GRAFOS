@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Text;
 
 namespace TP_GRAFOS
 {
@@ -22,17 +20,21 @@ namespace TP_GRAFOS
             _destino = destino;
         }
 
-        public void Executar()
+        /// <summary>
+        /// Agora retorna uma string com todo o conteúdo textual gerado pela análise.
+        /// </summary>
+        public string Executar()
         {
             EdmondsKarp();
-            ExibirResultado();
+            return ExibirResultado();
         }
 
         private void EdmondsKarp()
         {
             foreach (Aresta<int> e in _arestas)
             {
-                if (!_fluxos.ContainsKey(e)) _fluxos.Add(e, 0);
+                if (!_fluxos.ContainsKey(e))
+                    _fluxos.Add(e, 0);
             }
 
             ConstruirRedeResidual();
@@ -52,7 +54,6 @@ namespace TP_GRAFOS
                 delta = (p != null && p.Count > 0) ? CalcularDelta(p) : 0;
             }
         }
-
 
         private List<Aresta<int>>? CaminhoAumentanteMenosArestas()
         {
@@ -94,6 +95,7 @@ namespace TP_GRAFOS
             foreach (Aresta<int> e in _arestas)
             {
                 _capacidadeResidual[(e.Origem, e.Destino)] = e.Capacidade;
+
                 if (!_capacidadeResidual.ContainsKey((e.Destino, e.Origem)))
                 {
                     _capacidadeResidual.Add((e.Destino, e.Origem), 0);
@@ -127,19 +129,30 @@ namespace TP_GRAFOS
             }
         }
 
-        private void ExibirResultado()
+        /// <summary>
+        /// Retorna a string contendo tudo que antes era exibido no console.
+        /// </summary>
+        private string ExibirResultado()
         {
-            Console.WriteLine("--- Análise de Fluxo Máximo (Edmonds-Karp) ---");
-            Console.WriteLine($"Fonte: {_origem.Dado}, Sumidouro: {_destino.Dado}");
-            Console.WriteLine($"Fluxo Máximo Total Encontrado: {_fluxoMaximo}");
-            Console.WriteLine("\nFluxo por Aresta Original:");
+            var sb = new StringBuilder();
+
+            sb.AppendLine("--- Análise de Fluxo Máximo (Edmonds-Karp) ---");
+            sb.AppendLine($"Fonte: {_origem.Dado}, Sumidouro: {_destino.Dado}");
+            sb.AppendLine($"Fluxo Máximo Total Encontrado: {_fluxoMaximo}");
+            sb.AppendLine();
+            sb.AppendLine("Fluxo por Aresta Original:");
+
             foreach (var par in _fluxos)
             {
                 if (par.Value > 0)
                 {
-                    Console.WriteLine($"Aresta ({par.Key.Origem.Dado} -> {par.Key.Destino.Dado}): Fluxo = {par.Value}");
+                    sb.AppendLine($"Aresta ({par.Key.Origem.Dado} -> {par.Key.Destino.Dado}): Fluxo = {par.Value}");
                 }
             }
+
+            sb.AppendLine();
+
+            return sb.ToString();
         }
     }
 }

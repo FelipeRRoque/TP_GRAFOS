@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Text;
 
 namespace TP_GRAFOS
@@ -16,19 +12,26 @@ namespace TP_GRAFOS
             _grafo = grafo;
         }
 
-        public void Executar()
+        /// <summary>
+        /// Agora retorna uma string contendo tudo que seria impresso no console.
+        /// </summary>
+        public string Executar()
         {
+            var sb = new StringBuilder();
+
             if (_grafo is GrafoListaAdjacencia<int> listaAD)
             {
-                Console.WriteLine("\nExecutando Algoritmo de Prim...");
+                sb.AppendLine("\nExecutando Algoritmo de Prim...");
                 _resultadoAGM = Prim(listaAD);
             }
             else
             {
-                Console.WriteLine("\nExecutando Algoritmo de Kruskal...");
+                sb.AppendLine("\nExecutando Algoritmo de Kruskal...");
                 _resultadoAGM = Kruskal(_grafo);
             }
-            ExibirAGM(_resultadoAGM);
+
+            sb.Append(ExibirAGM(_resultadoAGM));
+            return sb.ToString();
         }
 
 
@@ -39,10 +42,9 @@ namespace TP_GRAFOS
 
             Vertice<int> r = vertices[0];
 
-            var conjuntoVerticesAdicionados = new HashSet<Vertice<int>> { r }; //não deixa repetir vertices
+            var conjuntoVerticesAdicionados = new HashSet<Vertice<int>> { r };
             var conjuntoArestasAdicionadas = new List<Aresta<int>>();
 
-            //**** Mudei as condicionais dos loops para estarem de acordo com a nova regra do EncontrarVizinhos da interface (Júlio) ****
             while (conjuntoVerticesAdicionados.Count < vertices.Count)
             {
                 Aresta<int>? menorAresta = null;
@@ -53,14 +55,12 @@ namespace TP_GRAFOS
 
                     foreach (Vertice<int> vDestino in vizinhos)
                     {
-
-                        //bool destinoJaFoiAdicionado = conjuntoVerticesAdicionados.Contains(vDestino);
                         if (!conjuntoVerticesAdicionados.Contains(vDestino))
                         {
                             int peso = grafo.ObterPeso(vAtual, vDestino);
                             int capacidade = grafo.ObterCapacidade(vAtual, vDestino);
 
-                            if (peso == int.MaxValue) // caso não exista aresta
+                            if (peso == int.MaxValue)
                                 continue;
 
                             if (menorAresta == null || peso < menorAresta.Peso)
@@ -70,6 +70,7 @@ namespace TP_GRAFOS
                         }
                     }
                 }
+
                 if (menorAresta == null)
                     throw new InvalidOperationException("Grafo não é conexo. Prim não pode continuar.");
 
@@ -77,8 +78,14 @@ namespace TP_GRAFOS
 
                 conjuntoArestasAdicionadas.Add(menorAresta);
 
-                subgrafo.AdicionarAresta(menorAresta.Origem.Dado, menorAresta.Destino.Dado, menorAresta.Peso, menorAresta.Capacidade);
+                subgrafo.AdicionarAresta(
+                    menorAresta.Origem.Dado,
+                    menorAresta.Destino.Dado,
+                    menorAresta.Peso,
+                    menorAresta.Capacidade
+                );
             }
+
             return conjuntoArestasAdicionadas;
         }
 
@@ -92,9 +99,7 @@ namespace TP_GRAFOS
             var juncoesDosVertices = new Dictionary<int, int>();
 
             foreach (var v in vertices)
-            {
                 juncoesDosVertices[v.Dado] = v.Dado;
-            }
 
             var conjuntoArestasAGM = new List<Aresta<int>>();
 
@@ -106,23 +111,29 @@ namespace TP_GRAFOS
                 if (origemJuncao != destinoJuncao)
                 {
                     conjuntoArestasAGM.Add(aresta);
-                    subgrafo.AdicionarAresta(aresta.Origem.Dado, aresta.Destino.Dado, aresta.Peso, aresta.Capacidade);
+                    subgrafo.AdicionarAresta(
+                        aresta.Origem.Dado,
+                        aresta.Destino.Dado,
+                        aresta.Peso,
+                        aresta.Capacidade
+                    );
 
                     foreach (var v in juncoesDosVertices.Keys.ToList())
-                    {
                         if (juncoesDosVertices[v] == destinoJuncao)
-                        {
                             juncoesDosVertices[v] = origemJuncao;
-                        }
-                    }
                 }
+
                 if (conjuntoArestasAGM.Count == vertices.Count - 1)
                     break;
             }
+
             return conjuntoArestasAGM;
         }
 
-        public void ExibirAGM<T>(List<Aresta<T>> arestas)
+        /// <summary>
+        /// Agora retorna a string com o conteúdo, ao invés de imprimir no console.
+        /// </summary>
+        public string ExibirAGM<T>(List<Aresta<T>> arestas)
         {
             var sb = new StringBuilder();
             sb.AppendLine("\n--- Árvore Geradora Mínima (AGM) ---");
@@ -137,7 +148,7 @@ namespace TP_GRAFOS
             sb.AppendLine($"Peso Total da AGM: {pesoTotal}");
             sb.AppendLine("-------------------------------------\n");
 
-            Console.WriteLine(sb.ToString());
+            return sb.ToString();
         }
     }
 }
