@@ -3,93 +3,94 @@
 namespace TP_GRAFOS
 {
     /// <summary>
+    /// Esta classe realiza a análise de existência e construção de um
+    /// Caminho ou Ciclo Euleriano em um grafo direcionado usando o Método de Fleury.
     ///
-    /// Esta classe realiza a análise de Caminho e Ciclo Euleriano em um grafo direcionado,
-    /// utilizando o **Método de Fleury** para determinar a sequência de visitação das arestas.
-    ///
-    /// 1) Fluxo básico da execução:
-    /// - O método <see cref="Executar"/> verifica preliminarmente as condições matemáticas:
-    ///     • Calcula os graus de entrada e saída de todos os vértices.
-    ///     • Determina a viabilidade:
-    ///         - **Ciclo Euleriano**: Todos os vértices têm (Grau Entrada == Grau Saída).
-    ///         - **Caminho Euleriano**: Apenas um vértice de início (Saída - Entrada = 1) e um de fim (Entrada - Saída = 1).
-    ///     • Se inviável, encerra a execução. Caso contrário, inicia o algoritmo de Fleury.
-    ///
-    /// 2) Implementações internas:
-    /// - <see cref="AlgoritmoFleury"/>:
-    ///     • Constrói o percurso de forma "gulosa", escolhendo arestas uma a uma e removendo-as do grafo (cópia temporária).
-    ///     • Para cada passo, decide qual aresta atravessar baseando-se na validação de pontes.
-    ///
-    /// - <see cref="EhProximaArestaValida"/> (Validação de Ponte):
-    ///     • Simula a remoção da aresta candidata.
-    ///     • Compara a quantidade de vértices alcançáveis antes e depois da remoção (usando BFS em <see cref="ContarVerticesAlcancaveis"/>).
-    ///     • **Regra de Fleury**: Uma aresta só é escolhida se não for uma "ponte" (isto é, sua remoção não desconecta o grafo restante),
-    ///       exceto se ela for a única opção disponível.
-    ///
-    /// 3) Finalização:
-    /// - O resultado é formatado em uma string contendo o diagnóstico (Impossível / Caminho / Ciclo)
-    ///   e a sequência ordenada de vértices visitados.
-    ///     
+    /// Principais etapas:
+    /// 1) Validação de graus:
+    ///    - Calcula grau de entrada (inDegree) e saída (outDegree) para cada vértice.
+    ///    - Determina se o grafo admite:
+    ///        * Ciclo Euleriano: para todo vértice indeg == outdeg; ou
+    ///        * Caminho Euleriano: existe exatamente um vértice com outdeg - indeg = 1
+    ///          (início) e um com indeg - outdeg = 1 (fim).
+    /// 2) Preparação de uma cópia mutável do grafo:
+    ///    - Constrói um dicionário adjTemporaria: int -> List<Aresta<int>> que será
+    ///      modificado durante a execução (remoção de arestas).
+    /// 3) Algoritmo de Fleury:
+    ///    - A cada passo escolhe uma aresta saindo do vértice atual que não seja ponte
+    ///      (ou a única disponível).
+    ///    - Para determinar se uma aresta é ponte, remove-se temporariamente a aresta,
+    ///      conta-se os vértices alcançáveis antes e depois (BFS) e compara-se as contagens.
+    ///    - Evita-se a exceção "Collection was modified" iterando sobre cópias (.ToList())
+    ///      das listas de adjacência quando for necessário testar/remover/reinserir arestas.
     /// </summary>
-
     public class AnalisarCaminhoEuleriano : IAnalises
     {
         private readonly IGrafo<int> _grafo;
 
         public AnalisarCaminhoEuleriano(IGrafo<int> grafo)
         {
-            _grafo = grafo;
+            _grafo = grafo ?? throw new ArgumentNullException(nameof(grafo));
         }
 
+        /// <summary>
+        /// Executa a análise completa: valida graus, decide o tipo (círculo/caminho),
+        /// e, se aplicável, constrói o percurso Euleriano usando Fleury.
+        /// Retorna um relatório em texto com o diagnóstico e a sequência de visita.
+        /// </summary>
         public string Executar()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine("=== Caminho / Ciclo Euleriano (Método de Fleury) ===");
             sb.AppendLine();
 
-            // 1. Validar condições de existência (Graus)
+            // 1) Obter lista de vértices e checar grafo vazio
             var vertices = _grafo.ObterVertices();
-            if (vertices.Count == 0)
+            if (vertices == null || vertices.Count == 0)
             {
                 sb.AppendLine("Grafo vazio.");
                 return sb.ToString();
             }
 
+            // 2) Inicializa contadores de grau de entrada e saída
             var inDegree = new Dictionary<int, int>();
             var outDegree = new Dictionary<int, int>();
-
-            // Inicializa contadores
             foreach (var v in vertices)
             {
                 inDegree[v.Dado] = 0;
                 outDegree[v.Dado] = 0;
             }
 
-            // Calcula graus
+            // 3) Calcula graus usando a lista de vizinhos do grafo original
             foreach (var u in vertices)
             {
-                var vizinhos = _grafo.ObterVizinhos(u);
+                var vizinhos = _grafo.ObterVizinhos(u) ?? new List<Vertice<int>>();
                 outDegree[u.Dado] = vizinhos.Count;
                 foreach (var v in vizinhos)
                 {
+                    // incrementa grau de entrada do destino
+                    if (!inDegree.ContainsKey(v.Dado))
+                        inDegree[v.Dado] = 0;
                     inDegree[v.Dado]++;
                 }
             }
 
-            // Verifica condições de Euler para grafos direcionados
-            Vertice<int> inicio = vertices[0]; // Padrão
+            // 4) Determina se existe ciclo ou caminho Euleriano (baseado nos graus)
+            Vertice<int> inicio = vertices[0]; // padrão: primeiro vértice
             int startNodes = 0;
             int endNodes = 0;
             bool impossivel = false;
 
             foreach (var v in vertices)
             {
-                int dif = outDegree[v.Dado] - inDegree[v.Dado];
+                int outDeg = outDegree.ContainsKey(v.Dado) ? outDegree[v.Dado] : 0;
+                int inDeg = inDegree.ContainsKey(v.Dado) ? inDegree[v.Dado] : 0;
+                int dif = outDeg - inDeg;
 
                 if (dif == 1)
                 {
                     startNodes++;
-                    inicio = v; // Candidato a início
+                    inicio = v; // candidato a início do caminho
                 }
                 else if (dif == -1)
                 {
@@ -97,12 +98,12 @@ namespace TP_GRAFOS
                 }
                 else if (dif != 0)
                 {
-                    impossivel = true; // Diferença > 1 ou < -1
+                    // diferença maior que 1 ou menor que -1 -> impossível
+                    impossivel = true;
                     break;
                 }
             }
 
-            // Validação das regras
             bool temCiclo = !impossivel && startNodes == 0 && endNodes == 0;
             bool temCaminho = !impossivel && startNodes == 1 && endNodes == 1;
 
@@ -117,28 +118,31 @@ namespace TP_GRAFOS
 
             sb.AppendLine(temCiclo ? "Condição: CICLO Euleriano detectado." : "Condição: CAMINHO Euleriano detectado.");
 
-            // 2. Preparar estrutura temporária para Fleury (Cópia Mutável)
-            // Usamos um Dicionário de Listas para simular o grafo e permitir remoção de arestas
+            // 5) Prepara uma cópia mutável do grafo (adjTemporaria) onde removeremos arestas
             var adjTemporaria = new Dictionary<int, List<Aresta<int>>>();
-
-            // Popula com cópias das arestas
             foreach (var v in vertices)
             {
                 adjTemporaria[v.Dado] = new List<Aresta<int>>();
             }
 
+            // Copia arestas do grafo original para a estrutura temporária (novas instâncias)
             foreach (var aresta in _grafo.ObterArestas())
             {
-                // Criamos nova instância para não afetar o grafo original
-                adjTemporaria[aresta.Origem.Dado].Add(new Aresta<int>(aresta.Origem, aresta.Destino, aresta.Peso, aresta.Capacidade));
+                // cria nova instância para manter original imutável
+                var copia = new Aresta<int>(aresta.Origem, aresta.Destino, aresta.Peso, aresta.Capacidade);
+                if (!adjTemporaria.ContainsKey(aresta.Origem.Dado))
+                {
+                    adjTemporaria[aresta.Origem.Dado] = new List<Aresta<int>>();
+                }
+                adjTemporaria[aresta.Origem.Dado].Add(copia);
             }
 
-            // 3. Executar Fleury
+            // 6) Executa Fleury sobre a cópia
             try
             {
                 var caminho = AlgoritmoFleury(inicio.Dado, adjTemporaria);
 
-                // Formatação da Saída
+                // Formata a sequência encontrada
                 sb.AppendLine("Sequência de Visita:");
                 for (int i = 0; i < caminho.Count; i++)
                 {
@@ -149,6 +153,7 @@ namespace TP_GRAFOS
             }
             catch (Exception ex)
             {
+                // captura qualquer exceção e retorna no relatório
                 sb.AppendLine($"Erro durante execução do algoritmo: {ex.Message}");
             }
 
@@ -156,29 +161,31 @@ namespace TP_GRAFOS
         }
 
         /// <summary>
-        /// Implementação do Algoritmo de Fleury.
-        /// Escolhe arestas uma a uma, evitando pontes.
+        /// Algoritmo de Fleury: constrói o percurso Euleriano escolhendo arestas que não
+        /// sejam pontes sempre que possível. Trabalha sobre 'adj' (cópia mutável do grafo).
         /// </summary>
         private List<int> AlgoritmoFleury(int u, Dictionary<int, List<Aresta<int>>> adj)
         {
             var caminho = new List<int>();
-            caminho.Add(u); // Adiciona vértice inicial
+            caminho.Add(u); // adiciona vértice inicial
 
-            // Enquanto houver arestas saindo do vértice atual
+            // Loop principal: enquanto existirem arestas saindo do vértice atual
             while (adj.ContainsKey(u) && adj[u].Count > 0)
             {
                 Aresta<int> arestaEscolhida = null;
 
-                // Caso 1: Se só tem uma aresta, é ela mesma (não há escolha)
+                // Se só há uma aresta, não há escolha: usá-la
                 if (adj[u].Count == 1)
                 {
                     arestaEscolhida = adj[u][0];
                 }
                 else
                 {
-                    // Caso 2: Tem mais de uma. Tenta achar uma que NÃO seja ponte.
-                    foreach (var aresta in adj[u])
+                    // IMPORTANTE: iterar sobre uma cópia (ToList) para evitar "Collection was modified"
+                    // pois EhProximaArestaValida faz remoção temporária/reinserção na mesma lista.
+                    foreach (var aresta in adj[u].ToList())
                     {
+                        // testa se a aresta não é ponte (ou seja, safe to cross)
                         if (EhProximaArestaValida(u, aresta, adj))
                         {
                             arestaEscolhida = aresta;
@@ -186,21 +193,24 @@ namespace TP_GRAFOS
                         }
                     }
 
-                    // Fallback: Se todas forem pontes (raro em euleriano válido, mas possível no fim), pega a primeira
+                    // Se nenhuma aresta foi considerada "não-ponte", escolhe-se a primeira (fallback)
                     if (arestaEscolhida == null)
                     {
                         arestaEscolhida = adj[u][0];
                     }
                 }
 
-                // Efetiva a travessia
-                // 1. Remove a aresta do grafo temporário
-                adj[u].Remove(arestaEscolhida);
+                // Efetiva a travessia: remove a aresta e avança para o destino
+                // Remover a instância da aresta que foi escolhida
+                bool removed = adj[u].Remove(arestaEscolhida);
+                if (!removed)
+                {
+                    // Caso improvável de falha na remoção (por segurança)
+                    throw new InvalidOperationException("Falha ao remover aresta escolhida da lista de adjacência.");
+                }
 
-                // 2. Move para o destino
+                // Avança para o próximo vértice
                 u = arestaEscolhida.Destino.Dado;
-
-                // 3. Adiciona ao caminho
                 caminho.Add(u);
             }
 
@@ -208,32 +218,40 @@ namespace TP_GRAFOS
         }
 
         /// <summary>
-        /// Verifica se a aresta (u -> v) é válida para ser atravessada agora.
-        /// No Fleury, uma aresta é válida se:
-        /// 1. É a única aresta saindo de u.
-        /// 2. OU se sua remoção não torna o grafo "menos alcançável" (não é ponte).
+        /// Verifica se a aresta (u -> aresta.Destino) pode ser escolhida agora.
+        /// Remove-se temporariamente a aresta, conta-se os vértices alcançáveis antes e depois,
+        /// e compara-se. Reinsere-se a aresta posteriormente (backtrack).
         /// </summary>
         private bool EhProximaArestaValida(int u, Aresta<int> aresta, Dictionary<int, List<Aresta<int>>> adj)
         {
-            // 1. Contar vértices alcançáveis ANTES de remover a aresta
+            // Contagem antes da remoção
             int contagemAntes = ContarVerticesAlcancaveis(u, adj);
 
-            // 2. Remover temporariamente a aresta
-            adj[u].Remove(aresta);
+            // Remove temporariamente a aresta (backtracking posterior)
+            bool removed = adj[u].Remove(aresta);
 
-            // 3. Contar vértices alcançáveis DEPOIS de remover
+            // Se por algum motivo a remoção falhar, consideramos a aresta inválida
+            if (!removed)
+            {
+                // Esse caso é improvável porque chamamos EhProximaArestaValida apenas com arestas existentes,
+                // mas aqui garantimos comportamento consistente.
+                return false;
+            }
+
+            // Contagem depois da remoção
             int contagemDepois = ContarVerticesAlcancaveis(u, adj);
 
-            // 4. Adicionar a aresta de volta (backtrack)
+            // Reinsere a aresta para restaurar o estado anterior. Inserimos no final;
+            // a ordem das arestas pode ser relevante em algumas políticas, mas aqui não afeta corretude.
             adj[u].Add(aresta);
 
-            // Se a contagem for a mesma, a aresta não é uma ponte (safe to cross)
-            // Se a contagem diminuiu, ela é uma ponte (evitar se possível)
+            // Se a contagem permanece a mesma, a remoção não desconectou o componente -> aresta não é ponte
             return contagemAntes == contagemDepois;
         }
 
         /// <summary>
-        /// BFS simples para contar quantos vértices são alcançáveis a partir de u.
+        /// BFS para contar quantos vértices são alcançáveis a partir de 'inicio' na estrutura 'adj'.
+        /// Itera sobre cópias (.ToList()) das listas para proteger contra modificações em chamadas aninhadas.
         /// </summary>
         private int ContarVerticesAlcancaveis(int inicio, Dictionary<int, List<Aresta<int>>> adj)
         {
@@ -247,15 +265,17 @@ namespace TP_GRAFOS
             {
                 int atual = fila.Dequeue();
 
-                if (adj.ContainsKey(atual))
+                if (!adj.ContainsKey(atual))
+                    continue;
+
+                // ITERAR SOBRE UMA CÓPIA para evitar problemas se a lista for modificada enquanto fazemos buscas
+                foreach (var aresta in adj[atual].ToList())
                 {
-                    foreach (var aresta in adj[atual])
+                    int destino = aresta.Destino.Dado;
+                    if (!visitados.Contains(destino))
                     {
-                        if (!visitados.Contains(aresta.Destino.Dado))
-                        {
-                            visitados.Add(aresta.Destino.Dado);
-                            fila.Enqueue(aresta.Destino.Dado);
-                        }
+                        visitados.Add(destino);
+                        fila.Enqueue(destino);
                     }
                 }
             }

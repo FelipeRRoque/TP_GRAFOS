@@ -4,6 +4,8 @@ namespace TP_GRAFOS
     {
         static void Main(string[] args)
         {
+            const int MAX_GRAFOS = 12;
+
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.WriteLine("=== Sistema de Otimização de Rotas Logísticas ===");
 
@@ -12,13 +14,10 @@ namespace TP_GRAFOS
                 PrintHeader("Seleção de Grafos");
 
                 Console.WriteLine("Escolha um grafo para analisar:");
-                Console.WriteLine("1) Grafo 1");
-                Console.WriteLine("2) Grafo 2");
-                Console.WriteLine("3) Grafo 3");
-                Console.WriteLine("4) Grafo 4");
-                Console.WriteLine("5) Grafo 5");
-                Console.WriteLine("6) Grafo 6");
-                Console.WriteLine("7) Grafo 7");
+
+                for (int i = 1; i <= MAX_GRAFOS; i++)
+                    Console.WriteLine($"{i}) Grafo {i}");
+
                 Console.WriteLine("0) Encerrar programa");
 
                 Console.Write("\nOpção: ");
@@ -32,7 +31,7 @@ namespace TP_GRAFOS
                 }
 
                 // validar número
-                if (!int.TryParse(opcGrafo, out int grafoEscolhido) || grafoEscolhido < 1 || grafoEscolhido > 7)
+                if (!int.TryParse(opcGrafo, out int grafoEscolhido) || grafoEscolhido < 1 || grafoEscolhido > MAX_GRAFOS)
                 {
                     Console.WriteLine("Opção inválida. Escolha um número de 1 a 7 ou 0 para sair.");
                     continue;
